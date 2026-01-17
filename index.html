@@ -263,43 +263,17 @@
         </div>
     </div>
 
-    <!-- Game Reset Modal -->
-    <div id="game-reset-modal" class="modal-overlay">
-        <div class="modal">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold">Reset Game Play Counts</h3>
-                <button onclick="closeGameResetModal()" class="text-gray-500 hover:text-gray-700">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            <div class="mb-4">
-                <p class="text-gray-600">Game: <span id="reset-game-name" class="font-semibold"></span></p>
-                <p class="text-gray-600">Game ID: <span id="reset-game-id" class="font-semibold"></span></p>
-                <p class="text-gray-600 text-sm mt-2">This will reset the daily play counts for ALL users for this game. Users will be able to play again.</p>
-            </div>
-            <div class="mb-6">
-                <label class="block font-semibold mb-2">Reset Date</label>
-                <input type="date" id="reset-date" class="input-field" value="">
-            </div>
-            <div class="flex justify-end space-x-2">
-                <button onclick="closeGameResetModal()" class="btn bg-gray-200 text-gray-800">Cancel</button>
-                <button onclick="confirmResetGamePlayCounts()" class="btn btn-danger">Reset Play Counts</button>
-            </div>
-        </div>
-    </div>
-
     <script type="module">
         // Firebase Configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyBEvTvWy-hH1HHgjoOhUKkj-Dglm11Oc8U",
-    authDomain: "cash-rewards-01-624ae.firebaseapp.com",
-    projectId: "cash-rewards-01-624ae",
-    storageBucket: "cash-rewards-01-624ae.firebasestorage.app",
-    messagingSenderId: "29119912449",
-    appId: "1:29119912449:web:4a7efb6d34ac4e4b603e00"
-};
-
-
+        const firebaseConfig = {
+            apiKey: "AIzaSyBEvTvWy-hH1HHgjoOhUKkj-Dglm11Oc8U",
+            authDomain: "cash-rewards-01-624ae.firebaseapp.com",
+            projectId: "cash-rewards-01-624ae",
+            storageBucket: "cash-rewards-01-624ae.firebasestorage.app",
+            messagingSenderId: "29119912449",
+            appId: "1:29119912449:web:e0c68c1994ff0a71603e00"
+        };
+        
         const ADMIN_UIDS = ["7IHZmOp2MGXG2u0wl98kgGgZwEE2"];
 
         // Firebase Imports
@@ -344,7 +318,6 @@ const firebaseConfig = {
         let currentEditingUserId = null;
         let currentViewingUserId = null;
         let currentEditingGameId = null;
-        let currentResettingGameId = null;
 
         // Initialize on load
         window.onload = () => {
@@ -434,7 +407,7 @@ const firebaseConfig = {
             if (pageId === 'settings') loadSettings();
         }
 
-        // Dashboard Functions
+        // Dashboard Functions (keep existing dashboard functions...)
         async function loadDashboard() {
             const page = document.getElementById('dashboard');
             page.innerHTML = `
@@ -650,7 +623,7 @@ const firebaseConfig = {
             }
         }
 
-        // ===== ENHANCED GAME MANAGEMENT =====
+        // ===== ENHANCED GAME MANAGEMENT (from reference code) =====
         async function loadGames() {
             const page = document.getElementById('games');
             page.innerHTML = `
@@ -671,7 +644,7 @@ const firebaseConfig = {
                         <i data-lucide="info" class="w-5 h-5 text-blue-600 mr-2"></i>
                         <p class="text-blue-700">
                             <strong>Features:</strong> 1) Set Daily Play Limit - Game becomes unplayable after limit reached. 
-                            2) Toggle Game Visibility - Hide/show game in mini-app. 3) Reset Play Counts - Reset daily plays for all users.
+                            2) Toggle Game Visibility - Hide/show game in mini-app.
                         </p>
                     </div>
                 </div>
@@ -714,9 +687,6 @@ const firebaseConfig = {
                             <button onclick="openQuickSettings('colorGame')" class="btn btn-primary flex-1">
                                 <i data-lucide="settings" class="w-4 h-4 mr-2"></i> Settings
                             </button>
-                            <button onclick="resetGamePlayCountsModal('colorGame', 'Color Game')" class="btn btn-warning flex-1">
-                                <i data-lucide="refresh-ccw" class="w-4 h-4 mr-2"></i> Reset Plays
-                            </button>
                         </div>
                     </div>
                     
@@ -757,9 +727,6 @@ const firebaseConfig = {
                             <button onclick="openQuickSettings('watchVideo')" class="btn btn-primary flex-1">
                                 <i data-lucide="settings" class="w-4 h-4 mr-2"></i> Settings
                             </button>
-                            <button onclick="resetGamePlayCountsModal('watchVideo', 'Watch Video')" class="btn btn-warning flex-1">
-                                <i data-lucide="refresh-ccw" class="w-4 h-4 mr-2"></i> Reset Plays
-                            </button>
                         </div>
                     </div>
                     
@@ -799,9 +766,6 @@ const firebaseConfig = {
                         <div class="game-action-buttons">
                             <button onclick="openQuickSettings('ludoDice')" class="btn btn-primary flex-1">
                                 <i data-lucide="settings" class="w-4 h-4 mr-2"></i> Settings
-                            </button>
-                            <button onclick="resetGamePlayCountsModal('ludoDice', 'Ludo Dice')" class="btn btn-warning flex-1">
-                                <i data-lucide="refresh-ccw" class="w-4 h-4 mr-2"></i> Reset Plays
                             </button>
                         </div>
                     </div>
@@ -904,7 +868,7 @@ const firebaseConfig = {
             }
         }
 
-        // Quick Game Settings Functions
+        // Quick Game Settings Functions (from reference code)
         function openQuickSettings(gameId) {
             currentEditingGameId = gameId;
             
@@ -1002,54 +966,7 @@ const firebaseConfig = {
             }
         }
 
-        // Game Reset Functions
-        function resetGamePlayCountsModal(gameId, gameName) {
-            currentResettingGameId = gameId;
-            document.getElementById('reset-game-name').textContent = gameName;
-            document.getElementById('reset-game-id').textContent = gameId;
-            document.getElementById('reset-date').value = new Date().toISOString().split('T')[0];
-            document.getElementById('game-reset-modal').style.display = 'flex';
-        }
-
-        function closeGameResetModal() {
-            document.getElementById('game-reset-modal').style.display = 'none';
-            currentResettingGameId = null;
-        }
-
-        async function confirmResetGamePlayCounts() {
-            if (!currentResettingGameId) return;
-            
-            const resetDate = document.getElementById('reset-date').value;
-            if (!resetDate) {
-                showAlert("❌ Please select a reset date");
-                return;
-            }
-            
-            loader.style.display = 'flex';
-            try {
-                // Update reset flag in Firestore
-                const resetRef = doc(db, "config", "resetFlags");
-                const resetSnap = await getDoc(resetRef);
-                const currentData = resetSnap.exists() ? resetSnap.data() : {};
-                
-                await setDoc(resetRef, {
-                    ...currentData,
-                    [`${currentResettingGameId}_reset_date`]: resetDate,
-                    updatedAt: serverTimestamp()
-                }, { merge: true });
-                
-                showToast("✅ Game play counts reset scheduled!");
-                closeGameResetModal();
-                
-            } catch (error) {
-                console.error("Error resetting game plays:", error);
-                showAlert("❌ Error resetting game plays: " + error.message, true);
-            } finally {
-                loader.style.display = 'none';
-            }
-        }
-
-        // Global Controls Functions
+        // Global Controls Functions (from reference code)
         async function applyGlobalPlayLimit() {
             const limit = parseInt(document.getElementById('global-play-limit').value) || 0;
             
@@ -1253,7 +1170,7 @@ const firebaseConfig = {
         async function loadGamesStats() {
             try {
                 const gamesSnap = await getDoc(doc(db, "config", "games"));
-                const gamesConfig = gamesSnap.exists() ? gamesConfig.data() : {};
+                const gamesConfig = gamesSnap.exists() ? gamesSnap.data() : {};
                 
                 // Get today's stats
                 const today = new Date().toISOString().split('T')[0];
@@ -1336,7 +1253,7 @@ const firebaseConfig = {
             }
         }
 
-        // Users Functions
+        // Users Functions (keep existing users functions...)
         async function loadUsers() {
             const page = document.getElementById('users');
             page.innerHTML = `
@@ -1454,7 +1371,7 @@ const firebaseConfig = {
             loadUsersData(searchTerm);
         }
 
-        // Withdrawals Functions
+        // Withdrawals Functions (keep existing withdrawals functions...)
         async function loadWithdrawals() {
             const page = document.getElementById('withdrawals');
             page.innerHTML = `
@@ -1546,11 +1463,11 @@ const firebaseConfig = {
             loadWithdrawalsData(status);
         }
 
-        // Notifications Functions - UPDATED WITH NOTICE SYSTEM
+        // Notifications Functions (keep existing notifications functions...)
         function loadNotifications() {
             const page = document.getElementById('notifications');
             page.innerHTML = `
-                <h1 class="text-3xl font-bold mb-6">Notifications & Notice System</h1>
+                <h1 class="text-3xl font-bold mb-6">Send Notification</h1>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="stat-card p-6">
                         <h2 class="text-xl font-bold mb-4">Send to All Users</h2>
@@ -1566,41 +1483,17 @@ const firebaseConfig = {
                     </div>
                     
                     <div class="stat-card p-6">
-                        <h2 class="text-xl font-bold mb-4">Set App Notice Message</h2>
+                        <h2 class="text-xl font-bold mb-4">Telegram Bot Configuration</h2>
                         <div class="mb-4">
-                            <label for="app-notice-title" class="block font-semibold mb-2">Notice Title</label>
-                            <input type="text" id="app-notice-title" class="input-field" placeholder="Important Notice">
+                            <label for="telegram-bot-token" class="block font-semibold mb-2">Bot Token</label>
+                            <input type="text" id="telegram-bot-token" class="input-field" placeholder="Enter bot token">
                         </div>
-                        <div class="mb-4">
-                            <label for="app-notice-message" class="block font-semibold mb-2">Notice Message</label>
-                            <textarea id="app-notice-message" rows="4" class="input-field" placeholder="Message shown to users on app startup"></textarea>
+                        <div class="mb-6">
+                            <label for="telegram-chat-id" class="block font-semibold mb-2">Chat ID</label>
+                            <input type="text" id="telegram-chat-id" class="input-field" placeholder="Enter chat ID">
                         </div>
-                        <div class="mb-4">
-                            <label class="flex items-center">
-                                <input type="checkbox" id="app-notice-enabled" class="mr-2" checked>
-                                <span class="font-semibold">Enable Notice</span>
-                            </label>
-                            <p class="text-sm text-gray-500">When enabled, notice will appear every time users open the app</p>
-                        </div>
-                        <div class="mb-4">
-                            <label class="flex items-center">
-                                <input type="checkbox" id="app-notice-cancelable" class="mr-2" checked>
-                                <span class="font-semibold">Allow Users to Cancel Notice</span>
-                            </label>
-                            <p class="text-sm text-gray-500">If unchecked, notice will auto-close after 3 seconds without buttons</p>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block font-semibold mb-2">Notice Type</label>
-                            <select id="app-notice-type" class="input-field">
-                                <option value="info">Information (Blue)</option>
-                                <option value="warning">Warning (Yellow)</option>
-                                <option value="success">Success (Green)</option>
-                                <option value="error">Error (Red)</option>
-                                <option value="premium">Premium (Gold)</option>
-                            </select>
-                        </div>
-                        <button onclick="saveAppNotice()" class="btn btn-success w-full mb-2">Save Notice</button>
-                        <button onclick="testAppNotice()" class="btn btn-warning w-full">Test Notice</button>
+                        <button onclick="testTelegramConnection()" class="btn btn-warning w-full mb-2">Test Connection</button>
+                        <button onclick="saveTelegramConfig()" class="btn btn-success w-full">Save Configuration</button>
                     </div>
                 </div>
                 
@@ -1614,124 +1507,7 @@ const firebaseConfig = {
             
             document.getElementById('send-notification-btn').addEventListener('click', sendNotification);
             loadNotificationHistory();
-            loadAppNoticeSettings();
             loadTelegramConfig();
-        }
-
-        async function loadAppNoticeSettings() {
-            try {
-                const noticeSnap = await getDoc(doc(db, "config", "appNotice"));
-                if (noticeSnap.exists()) {
-                    const notice = noticeSnap.data();
-                    document.getElementById('app-notice-title').value = notice.title || '';
-                    document.getElementById('app-notice-message').value = notice.message || '';
-                    document.getElementById('app-notice-enabled').checked = notice.enabled || false;
-                    document.getElementById('app-notice-cancelable').checked = notice.cancelable !== false;
-                    document.getElementById('app-notice-type').value = notice.type || 'info';
-                }
-            } catch (error) {
-                console.error("Error loading notice settings:", error);
-            }
-        }
-
-        async function saveAppNotice() {
-            const title = document.getElementById('app-notice-title').value;
-            const message = document.getElementById('app-notice-message').value;
-            const enabled = document.getElementById('app-notice-enabled').checked;
-            const cancelable = document.getElementById('app-notice-cancelable').checked;
-            const type = document.getElementById('app-notice-type').value;
-            
-            if (!title || !message) {
-                showAlert("Please enter both title and message for the notice.");
-                return;
-            }
-            
-            loader.style.display = 'flex';
-            try {
-                await setDoc(doc(db, "config", "appNotice"), {
-                    title,
-                    message,
-                    enabled,
-                    cancelable,
-                    type,
-                    updatedAt: serverTimestamp(),
-                    lastUpdatedBy: auth.currentUser?.uid || 'admin'
-                });
-                
-                showToast("✅ App notice saved successfully!");
-            } catch (error) {
-                console.error("Error saving app notice:", error);
-                showAlert("❌ Error saving app notice: " + error.message, true);
-            } finally {
-                loader.style.display = 'none';
-            }
-        }
-
-        function testAppNotice() {
-            const title = document.getElementById('app-notice-title').value || "Test Notice";
-            const message = document.getElementById('app-notice-message').value || "This is a test notice message.";
-            const type = document.getElementById('app-notice-type').value || "info";
-            const cancelable = document.getElementById('app-notice-cancelable').checked;
-            
-            showNotice(title, message, type, cancelable);
-        }
-
-        function showNotice(title, message, type = "info", cancelable = true) {
-            // Create notice element
-            const noticeEl = document.createElement('div');
-            noticeEl.className = `fixed top-5 left-5 right-5 z-50 p-4 rounded-lg shadow-lg ${
-                type === 'info' ? 'bg-blue-600' :
-                type === 'warning' ? 'bg-yellow-600' :
-                type === 'success' ? 'bg-green-600' :
-                type === 'error' ? 'bg-red-600' :
-                'bg-gradient-to-r from-yellow-500 to-yellow-600'
-            } text-white`;
-            
-            noticeEl.innerHTML = `
-                <div class="flex items-start justify-between">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0 pt-0.5">
-                            <i data-lucide="${
-                                type === 'info' ? 'info' :
-                                type === 'warning' ? 'alert-triangle' :
-                                type === 'success' ? 'check-circle' :
-                                type === 'error' ? 'x-circle' :
-                                'crown'
-                            }" class="w-5 h-5"></i>
-                        </div>
-                        <div class="ml-3">
-                            <h3 class="font-bold text-lg">${title}</h3>
-                            <p class="mt-1">${message}</p>
-                            ${!cancelable ? `<p class="text-sm mt-2 opacity-90">Auto-closing in 3 seconds...</p>` : ''}
-                        </div>
-                    </div>
-                    ${cancelable ? `
-                    <button onclick="this.parentElement.parentElement.remove()" class="text-white hover:text-gray-200 ml-4">
-                        <i data-lucide="x" class="w-5 h-5"></i>
-                    </button>
-                    ` : ''}
-                </div>
-            `;
-            
-            // Add to body and create icons
-            document.body.appendChild(noticeEl);
-            lucide.createIcons();
-            
-            // Auto-remove after 3 seconds if not cancelable
-            if (!cancelable) {
-                setTimeout(() => {
-                    if (noticeEl.parentElement) {
-                        noticeEl.remove();
-                    }
-                }, 3000);
-            } else {
-                // Auto-remove after 10 seconds if cancelable
-                setTimeout(() => {
-                    if (noticeEl.parentElement) {
-                        noticeEl.remove();
-                    }
-                }, 10000);
-            }
         }
 
         async function sendNotification() {
@@ -1834,12 +1610,8 @@ const firebaseConfig = {
             const configSnap = await getDoc(doc(db, "config", "telegram"));
             if (configSnap.exists()) {
                 const config = configSnap.data();
-                if (document.getElementById('telegram-bot-token')) {
-                    document.getElementById('telegram-bot-token').value = config.botToken || '';
-                }
-                if (document.getElementById('telegram-chat-id')) {
-                    document.getElementById('telegram-chat-id').value = config.chatId || '';
-                }
+                document.getElementById('telegram-bot-token').value = config.botToken || '';
+                document.getElementById('telegram-chat-id').value = config.chatId || '';
             }
         }
 
@@ -1912,7 +1684,7 @@ const firebaseConfig = {
             }
         }
 
-        // Settings Functions - UPDATED WITH NOTICE SYSTEM
+        // Settings Functions - UPDATED WITH SPECIAL TASK SYSTEM
         async function loadSettings() {
             const page = document.getElementById('settings');
             page.innerHTML = `
@@ -2414,16 +2186,21 @@ const firebaseConfig = {
             showConfirm("Are you sure you want to reset website visit history for ALL users? This will allow all users to visit websites again for rewards.", async () => {
                 loader.style.display = 'flex';
                 try {
-                    // Update the reset date in config
-                    const configRef = doc(db, "config", "main");
-                    const today = new Date().toISOString().split('T')[0];
+                    // Get all users
+                    const usersSnap = await getDocs(collection(db, "users"));
+                    const batch = writeBatch(db);
                     
-                    await updateDoc(configRef, {
-                        lastWebsiteResetDate: today,
-                        updatedAt: serverTimestamp()
+                    // Reset visitedWebsitesToday for each user
+                    usersSnap.forEach((userDoc) => {
+                        const userRef = doc(db, "users", userDoc.id);
+                        batch.update(userRef, { 
+                            visitedWebsitesToday: [],
+                            lastWebsiteVisitDate: '1970-01-01'
+                        });
                     });
                     
-                    showToast("✅ Website visit history reset scheduled! Users will see the changes when they next open the app.");
+                    await batch.commit();
+                    showToast("✅ Website visit history reset successfully for all users!");
                 } catch (error) {
                     console.error("Error resetting website history:", error);
                     showAlert("❌ Error resetting website history: " + error.message, true);
@@ -2760,10 +2537,8 @@ const firebaseConfig = {
         window.removeWebsite = removeWebsite;
         window.saveWebsiteConfig = saveWebsiteConfig;
         window.saveAllSettings = saveAllSettings;
-        window.saveAppNotice = saveAppNotice;
-        window.testAppNotice = testAppNotice;
         
-        // Game Management functions
+        // Game Management functions (from reference code)
         window.openQuickSettings = openQuickSettings;
         window.closeQuickSettingsModal = closeQuickSettingsModal;
         window.saveQuickGameSettings = saveQuickGameSettings;
@@ -2773,9 +2548,6 @@ const firebaseConfig = {
         window.hideAllGames = hideAllGames;
         window.syncAllGameSettings = syncAllGameSettings;
         window.resetAllGameStats = resetAllGameStats;
-        window.resetGamePlayCountsModal = resetGamePlayCountsModal;
-        window.closeGameResetModal = closeGameResetModal;
-        window.confirmResetGamePlayCounts = confirmResetGamePlayCounts;
     </script>
 </body>
 </html>
