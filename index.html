@@ -79,6 +79,8 @@
         #gigapub-id,
         #adsgram-rewardid,
         #adsgram-interstitialid,
+        #adexium-reward-id,
+        #adexium-interstitial-id,
         #minWithdrawal,
         #conversionRatePoints,
         #conversionRateTaka,
@@ -1074,40 +1076,51 @@
                 
                 // If no config exists, create initial setup with GigaPub field
                 if (!adNetworkSnap.exists()) {
-                    console.log("⚡ Creating ad network configuration with GigaPub ID...");
+                    console.log("⚡ Creating ad network configuration with all networks...");
                     
                     const initialAdNetworkConfig = {
-                        gigapubId: "978",  // Default GigaPub ID from the script
-                        adsgramRewardId: "",
-                        adsgramInterstitialId: "",
+                        gigapubId: "978",
+                        adsgramRewardId: "21145",
+                        adsgramInterstitialId: "int-21144",
+                        richAdsPubId: "956231",
+                        richAdsAppId: "6162",
+                        adexiumRewardId: "30015b9a-df1e-4895-be7b-c5bc1b148fcf",
+                        adexiumInterstitialId: "d29f2549-2e28-4016-8b89-f36b11f66244",
                         adTimeout: 5,
                         preloadAds: true,
                         updatedAt: serverTimestamp()
                     };
                     
                     await setDoc(adNetworkRef, initialAdNetworkConfig);
-                    console.log("✅ Created ad network configuration with GigaPub ID");
+                    console.log("✅ Created ad network configuration with all 4 networks");
                 } else {
-                    // Check if gigapubId exists in the config
+                    // Check if all fields exist in the config
                     const currentConfig = adNetworkSnap.data();
-                    if (!currentConfig.gigapubId) {
-                        // Add missing gigapubId field
-                        await updateDoc(adNetworkRef, {
-                            gigapubId: "978",
-                            updatedAt: serverTimestamp()
-                        });
-                        console.log("✅ Added missing GigaPub ID to existing configuration");
+                    const updates = {};
+                    
+                    if (!currentConfig.gigapubId) updates.gigapubId = "978";
+                    if (!currentConfig.adsgramRewardId) updates.adsgramRewardId = "21145";
+                    if (!currentConfig.adsgramInterstitialId) updates.adsgramInterstitialId = "int-21144";
+                    if (!currentConfig.richAdsPubId) updates.richAdsPubId = "956231";
+                    if (!currentConfig.richAdsAppId) updates.richAdsAppId = "6162";
+                    if (!currentConfig.adexiumRewardId) updates.adexiumRewardId = "30015b9a-df1e-4895-be7b-c5bc1b148fcf";
+                    if (!currentConfig.adexiumInterstitialId) updates.adexiumInterstitialId = "d29f2549-2e28-4016-8b89-f36b11f66244";
+                    
+                    if (Object.keys(updates).length > 0) {
+                        updates.updatedAt = serverTimestamp();
+                        await updateDoc(adNetworkRef, updates);
+                        console.log("✅ Added missing ad network fields to existing configuration");
                     }
                 }
                 
-                console.log("🎉 GigaPub configuration initialized successfully!");
+                console.log("🎉 Ad network configuration initialized with all 4 networks!");
                 
             } catch (error) {
-                console.error("❌ Error initializing GigaPub configuration:", error);
+                console.error("❌ Error initializing ad network configuration:", error);
             }
         }
 
-        // ===== UPDATED: Initialize Admin Panel with GigaPub Fix =====
+        // ===== UPDATED: Initialize Admin Panel with all ad networks =====
         async function initializeAdminPanelOnFirstLogin() {
             try {
                 console.log("🔄 Initializing admin panel for first-time setup...");
@@ -1150,7 +1163,7 @@
                         ludoDiceSpecialTaskReward: 150,
                         ludoDiceSpecialTaskTimer: 30,
                         
-                        // Websites (CRITICAL - this fixes website unavailable error)
+                        // Websites
                         websitesToVisit: [
                             {
                                 name: "Google",
@@ -1218,7 +1231,7 @@
                     console.log("✅ Created main configuration");
                 }
                 
-                // Initialize GigaPub configuration (CRITICAL FIX)
+                // Initialize ad network configuration with all 4 networks
                 await initializeGigaPubConfiguration();
                 
                 // Create games config
@@ -1333,7 +1346,7 @@
                     console.log("✅ Created special tasks configuration");
                 }
                 
-                console.log("🎉 Admin panel initialization complete with GigaPub fix!");
+                console.log("🎉 Admin panel initialization complete with all 4 ad networks!");
                 
             } catch (error) {
                 console.error("❌ Error initializing admin panel:", error);
@@ -1447,13 +1460,13 @@
             lucide.createIcons();
         }
 
-        // ===== UPDATED: Auth State Handler with GigaPub Initialization =====
+        // ===== UPDATED: Auth State Handler with ad network initialization =====
         function handleAuthStateChange(user) {
             if (user && ADMIN_UIDS.includes(user.uid)) {
                 document.getElementById('auth-section').style.display = 'none';
                 document.getElementById('panel-section').style.display = 'block';
                 
-                // Initialize admin panel with GigaPub fix
+                // Initialize admin panel with all ad networks
                 initializeAdminPanelOnFirstLogin();
                 
                 navigateTo('dashboard');
@@ -3079,45 +3092,31 @@
             }
         }
 
-        // ===== ENHANCED AD NETWORK CONFIGURATION =====
+        // ===== ENHANCED AD NETWORK CONFIGURATION WITH ALL 4 NETWORKS =====
         async function loadAdNetwork() {
             const page = document.getElementById('adnetwork');
             page.innerHTML = `
                 <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-3xl font-bold text-gray-800">Ad Network Configuration</h1>
+                    <h1 class="text-3xl font-bold text-gray-800">Ad Network Configuration (4 Networks)</h1>
                     <button onclick="testAllAdNetworks()" class="btn btn-warning">
                         <i data-lucide="play" class="w-4 h-4 mr-2"></i> Test All Ad Networks
                     </button>
                 </div>
                 
                 <div class="bg-white p-6 rounded-lg shadow">
-                    <h2 class="text-xl font-bold mb-4 text-gray-800">Fast Ad Loading System</h2>
-                    <p class="text-gray-600 mb-6">Configure multiple ad networks for maximum fill rate. System will try in order: GigaPub → AdsGram.</p>
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">Multi-Network Ad System</h2>
+                    <p class="text-gray-600 mb-6">Configure all networks for maximum fill rate. System tries GigaPub (fastest), then AdsGram, with RichAds and Adexium always-on.</p>
                     
                     <div class="space-y-6">
-                        <!-- GigaPub Configuration (Primary) -->
+                        <!-- GigaPub Configuration (Primary - Fastest) -->
                         <div class="border border-green-200 rounded-lg p-4 bg-green-50">
                             <h3 class="text-lg font-semibold mb-3 text-green-700">
                                 <i data-lucide="zap" class="w-5 h-5 inline mr-2"></i>GigaPub (Primary - Fastest)
                             </h3>
-                            <div class="space-y-3">
-                                <div>
-                                    <label class="block font-medium mb-1 text-gray-700">GigaPub ID *</label>
-                                    <input type="text" id="gigapub-id" class="input-field" placeholder="Enter GigaPub ID" value="978" required>
-                                    <p class="text-sm text-green-600 mt-1">
-                                        <i data-lucide="info" class="w-4 h-4 inline mr-1"></i>
-                                        Primary ad network - loads instantly from preloaded SDK
-                                    </p>
-                                </div>
-                                <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
-                                    <h4 class="font-semibold text-blue-800 mb-2">Fast Loading Strategy:</h4>
-                                    <ul class="text-sm text-blue-700 space-y-1">
-                                        <li>• SDK pre-loaded in background</li>
-                                        <li>• Instant ad delivery for all games</li>
-                                        <li>• No waiting time for users</li>
-                                        <li>• Highest revenue potential</li>
-                                    </ul>
-                                </div>
+                            <div>
+                                <label class="block font-medium mb-1 text-gray-700">GigaPub ID *</label>
+                                <input type="text" id="gigapub-id" class="input-field" placeholder="Enter GigaPub ID" value="978" required>
+                                <p class="text-sm text-green-600 mt-1">Primary ad network - loads instantly from preloaded SDK</p>
                             </div>
                         </div>
                         
@@ -3126,45 +3125,107 @@
                             <h3 class="text-lg font-semibold mb-3 text-purple-700">
                                 <i data-lucide="shield" class="w-5 h-5 inline mr-2"></i>AdsGram (Fallback)
                             </h3>
-                            <div class="space-y-3">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block font-medium mb-1 text-gray-700">Reward Block ID</label>
-                                    <input type="text" id="adsgram-rewardid" class="input-field" placeholder="Enter AdsGram Reward ID">
+                                    <input type="text" id="adsgram-rewardid" class="input-field" value="21145" placeholder="Enter Reward ID">
                                 </div>
                                 <div>
                                     <label class="block font-medium mb-1 text-gray-700">Interstitial Block ID</label>
-                                    <input type="text" id="adsgram-interstitialid" class="input-field" placeholder="Enter AdsGram Interstitial ID">
+                                    <input type="text" id="adsgram-interstitialid" class="input-field" value="int-21144" placeholder="Enter Interstitial ID">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- RichAds Configuration (Always-On) -->
+                        <div class="border border-blue-200 rounded-lg p-4 bg-blue-50">
+                            <h3 class="text-lg font-semibold mb-3 text-blue-700">
+                                <i data-lucide="infinity" class="w-5 h-5 inline mr-2"></i>RichAds (Always-On)
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block font-medium mb-1 text-gray-700">Publisher ID</label>
+                                    <input type="text" id="richads-pubid" class="input-field" value="956231" placeholder="Enter Publisher ID">
+                                </div>
+                                <div>
+                                    <label class="block font-medium mb-1 text-gray-700">App ID</label>
+                                    <input type="text" id="richads-appid" class="input-field" value="6162" placeholder="Enter App ID">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Adexium Configuration (Always-On) -->
+                        <div class="border border-yellow-200 rounded-lg p-4 bg-yellow-50">
+                            <h3 class="text-lg font-semibold mb-3 text-yellow-700">
+                                <i data-lucide="sparkles" class="w-5 h-5 inline mr-2"></i>Adexium (Always-On)
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block font-medium mb-1 text-gray-700">Reward Widget ID</label>
+                                    <input type="text" id="adexium-reward-id" class="input-field" value="30015b9a-df1e-4895-be7b-c5bc1b148fcf" placeholder="Enter Reward Widget ID">
+                                </div>
+                                <div>
+                                    <label class="block font-medium mb-1 text-gray-700">Interstitial Widget ID</label>
+                                    <input type="text" id="adexium-interstitial-id" class="input-field" value="d29f2549-2e28-4016-8b89-f36b11f66244" placeholder="Enter Interstitial Widget ID">
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Ad Loading Strategy -->
-                        <div class="border border-yellow-200 rounded-lg p-4 bg-yellow-50">
-                            <h3 class="text-lg font-semibold mb-3 text-yellow-700">
-                                <i data-lucide="rocket" class="w-5 h-5 inline mr-2"></i>Ad Loading Strategy
-                            </h3>
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <h3 class="text-lg font-semibold mb-3 text-gray-700">Ad Loading Strategy</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block font-medium mb-1 text-gray-700">Max Wait Time (seconds)</label>
                                     <input type="number" id="ad-timeout" class="input-field" value="5" min="1" max="30">
-                                    <p class="text-sm text-gray-500 mt-1">Time to wait for ad before showing fallback</p>
+                                    <p class="text-sm text-gray-500 mt-1">Time to wait for primary ad before showing fallback</p>
                                 </div>
                                 <div>
                                     <label class="block font-medium mb-1 text-gray-700">Preload Ads</label>
                                     <select id="preload-ads" class="input-field">
-                                        <option value="true" selected>Enabled</option>
+                                        <option value="true" selected>Enabled (Faster)</option>
                                         <option value="false">Disabled</option>
                                     </select>
-                                    <p class="text-sm text-gray-500 mt-1">Preload ads in background for faster display</p>
+                                    <p class="text-sm text-gray-500 mt-1">Preload ads in background for instant display</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="mt-8">
-                        <button onclick="saveAdNetworkConfig()" class="btn btn-primary px-8 py-3">
-                            <i data-lucide="save" class="w-5 h-5 mr-2"></i> Save Ad Network Settings
+                    <div class="mt-8 flex justify-end space-x-4">
+                        <button onclick="resetAdNetworkConfig()" class="btn btn-secondary px-6 py-3">
+                            <i data-lucide="refresh-cw" class="w-5 h-5 mr-2"></i> Reset to Defaults
                         </button>
+                        <button onclick="saveAdNetworkConfig()" class="btn btn-primary px-8 py-3">
+                            <i data-lucide="save" class="w-5 h-5 mr-2"></i> Save All Ad Networks
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Network Status -->
+                <div class="mt-6 bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">Network Status</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="p-3 bg-green-50 border border-green-200 rounded-lg text-center">
+                            <i data-lucide="check-circle" class="w-6 h-6 mx-auto text-green-600"></i>
+                            <p class="font-semibold mt-2 text-green-800">GigaPub</p>
+                            <p class="text-sm text-green-600">Primary</p>
+                        </div>
+                        <div class="p-3 bg-purple-50 border border-purple-200 rounded-lg text-center">
+                            <i data-lucide="check-circle" class="w-6 h-6 mx-auto text-purple-600"></i>
+                            <p class="font-semibold mt-2 text-purple-800">AdsGram</p>
+                            <p class="text-sm text-purple-600">Fallback</p>
+                        </div>
+                        <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg text-center">
+                            <i data-lucide="infinity" class="w-6 h-6 mx-auto text-blue-600"></i>
+                            <p class="font-semibold mt-2 text-blue-800">RichAds</p>
+                            <p class="text-sm text-blue-600">Always-On</p>
+                        </div>
+                        <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
+                            <i data-lucide="sparkles" class="w-6 h-6 mx-auto text-yellow-600"></i>
+                            <p class="font-semibold mt-2 text-yellow-800">Adexium</p>
+                            <p class="text-sm text-yellow-600">Always-On</p>
+                        </div>
                     </div>
                 </div>
             `;
@@ -3175,7 +3236,7 @@
         }
 
         async function testAllAdNetworks() {
-            showConfirm("Test all configured ad networks? This will check connectivity and fill rates.", async () => {
+            showConfirm("Test all configured ad networks? This will check configuration status.", async () => {
                 loader.style.display = 'flex';
                 try {
                     const configSnap = await getDoc(doc(db, "config", "adnetwork"));
@@ -3187,25 +3248,88 @@
                     if (config.gigapubId) {
                         testResults.push(`✅ GigaPub: Configured (ID: ${config.gigapubId})`);
                     } else {
-                        testResults.push(`❌ GigaPub: Not configured - users won't see ads`);
+                        testResults.push(`❌ GigaPub: Not configured`);
                     }
                     
                     // Test AdsGram
                     if (config.adsgramRewardId) {
                         testResults.push(`✅ AdsGram Reward: Configured (ID: ${config.adsgramRewardId})`);
                     } else {
-                        testResults.push(`⚠️ AdsGram Reward: Not configured - no fallback available`);
+                        testResults.push(`⚠️ AdsGram Reward: Not configured`);
                     }
                     
                     if (config.adsgramInterstitialId) {
                         testResults.push(`✅ AdsGram Interstitial: Configured (ID: ${config.adsgramInterstitialId})`);
                     }
                     
-                    showAlert(`Ad Network Test Results:\n\n${testResults.join('\n')}\n\n✅ System ready for fast ad delivery!`);
+                    // Test RichAds
+                    if (config.richAdsPubId && config.richAdsAppId) {
+                        testResults.push(`✅ RichAds: Configured (Pub: ${config.richAdsPubId}, App: ${config.richAdsAppId})`);
+                    } else {
+                        testResults.push(`⚠️ RichAds: Not fully configured`);
+                    }
+                    
+                    // Test Adexium
+                    if (config.adexiumRewardId) {
+                        testResults.push(`✅ Adexium Reward: Configured (ID: ${config.adexiumRewardId})`);
+                    } else {
+                        testResults.push(`⚠️ Adexium Reward: Not configured`);
+                    }
+                    
+                    if (config.adexiumInterstitialId) {
+                        testResults.push(`✅ Adexium Interstitial: Configured (ID: ${config.adexiumInterstitialId})`);
+                    }
+                    
+                    testResults.push(`\n📊 Total Networks: 4 (GigaPub, AdsGram, RichAds, Adexium)`);
+                    testResults.push(`⚡ Ad Timeout: ${config.adTimeout || 5} seconds`);
+                    testResults.push(`🔄 Preload Ads: ${config.preloadAds ? 'Enabled' : 'Disabled'}`);
+                    
+                    showAlert(`Ad Network Test Results:\n\n${testResults.join('\n')}\n\n✅ System ready for maximum ad fill rate!`);
                     
                 } catch (error) {
                     console.error("Error testing ad networks:", error);
                     showAlert("❌ Error testing ad networks: " + error.message, true);
+                } finally {
+                    loader.style.display = 'none';
+                }
+            });
+        }
+
+        async function resetAdNetworkConfig() {
+            showConfirm("Reset all ad network settings to default values?", async () => {
+                loader.style.display = 'flex';
+                try {
+                    const defaultConfig = {
+                        gigapubId: "978",
+                        adsgramRewardId: "21145",
+                        adsgramInterstitialId: "int-21144",
+                        richAdsPubId: "956231",
+                        richAdsAppId: "6162",
+                        adexiumRewardId: "30015b9a-df1e-4895-be7b-c5bc1b148fcf",
+                        adexiumInterstitialId: "d29f2549-2e28-4016-8b89-f36b11f66244",
+                        adTimeout: 5,
+                        preloadAds: true,
+                        updatedAt: serverTimestamp()
+                    };
+                    
+                    await setDoc(doc(db, "config", "adnetwork"), defaultConfig);
+                    
+                    // Update form fields
+                    document.getElementById('gigapub-id').value = "978";
+                    document.getElementById('adsgram-rewardid').value = "21145";
+                    document.getElementById('adsgram-interstitialid').value = "int-21144";
+                    document.getElementById('richads-pubid').value = "956231";
+                    document.getElementById('richads-appid').value = "6162";
+                    document.getElementById('adexium-reward-id').value = "30015b9a-df1e-4895-be7b-c5bc1b148fcf";
+                    document.getElementById('adexium-interstitial-id').value = "d29f2549-2e28-4016-8b89-f36b11f66244";
+                    document.getElementById('ad-timeout').value = "5";
+                    document.getElementById('preload-ads').value = "true";
+                    
+                    showToast("✅ Ad network settings reset to defaults!");
+                    
+                } catch (error) {
+                    console.error("Error resetting ad network config:", error);
+                    showAlert("❌ Error resetting settings: " + error.message, true);
                 } finally {
                     loader.style.display = 'none';
                 }
@@ -3219,52 +3343,55 @@
                 if (configSnap.exists()) {
                     const config = configSnap.data();
                     
-                    if (config.gigapubId) {
-                        document.getElementById('gigapub-id').value = config.gigapubId;
-                    } else {
-                        // Set default GigaPub ID
-                        document.getElementById('gigapub-id').value = "978";
-                    }
-                    
-                    if (config.adsgramRewardId) {
-                        document.getElementById('adsgram-rewardid').value = config.adsgramRewardId;
-                    }
-                    
-                    if (config.adsgramInterstitialId) {
-                        document.getElementById('adsgram-interstitialid').value = config.adsgramInterstitialId;
-                    }
-                    
-                    if (config.adTimeout !== undefined) {
-                        document.getElementById('ad-timeout').value = config.adTimeout;
-                    }
-                    
-                    if (config.preloadAds !== undefined) {
-                        document.getElementById('preload-ads').value = config.preloadAds.toString();
-                    }
+                    document.getElementById('gigapub-id').value = config.gigapubId || "978";
+                    document.getElementById('adsgram-rewardid').value = config.adsgramRewardId || "21145";
+                    document.getElementById('adsgram-interstitialid').value = config.adsgramInterstitialId || "int-21144";
+                    document.getElementById('richads-pubid').value = config.richAdsPubId || "956231";
+                    document.getElementById('richads-appid').value = config.richAdsAppId || "6162";
+                    document.getElementById('adexium-reward-id').value = config.adexiumRewardId || "30015b9a-df1e-4895-be7b-c5bc1b148fcf";
+                    document.getElementById('adexium-interstitial-id').value = config.adexiumInterstitialId || "d29f2549-2e28-4016-8b89-f36b11f66244";
+                    document.getElementById('ad-timeout').value = config.adTimeout || 5;
+                    document.getElementById('preload-ads').value = config.preloadAds ? "true" : "false";
                 } else {
-                    // Set default values if no config exists
+                    // Set default values
                     document.getElementById('gigapub-id').value = "978";
-                    document.getElementById('ad-timeout').value = 5;
+                    document.getElementById('adsgram-rewardid').value = "21145";
+                    document.getElementById('adsgram-interstitialid').value = "int-21144";
+                    document.getElementById('richads-pubid').value = "956231";
+                    document.getElementById('richads-appid').value = "6162";
+                    document.getElementById('adexium-reward-id').value = "30015b9a-df1e-4895-be7b-c5bc1b148fcf";
+                    document.getElementById('adexium-interstitial-id').value = "d29f2549-2e28-4016-8b89-f36b11f66244";
+                    document.getElementById('ad-timeout').value = "5";
                     document.getElementById('preload-ads').value = "true";
                     
                     // Create default configuration
                     const defaultConfig = {
                         gigapubId: "978",
-                        adsgramRewardId: "",
-                        adsgramInterstitialId: "",
+                        adsgramRewardId: "21145",
+                        adsgramInterstitialId: "int-21144",
+                        richAdsPubId: "956231",
+                        richAdsAppId: "6162",
+                        adexiumRewardId: "30015b9a-df1e-4895-be7b-c5bc1b148fcf",
+                        adexiumInterstitialId: "d29f2549-2e28-4016-8b89-f36b11f66244",
                         adTimeout: 5,
                         preloadAds: true,
                         updatedAt: serverTimestamp()
                     };
                     
                     await setDoc(doc(db, "config", "adnetwork"), defaultConfig);
-                    console.log("✅ Created default ad network configuration");
+                    console.log("✅ Created default ad network configuration with all 4 networks");
                 }
             } catch (error) {
                 console.error("Error loading ad network config:", error);
                 // Set default values on error
                 document.getElementById('gigapub-id').value = "978";
-                document.getElementById('ad-timeout').value = 5;
+                document.getElementById('adsgram-rewardid').value = "21145";
+                document.getElementById('adsgram-interstitialid').value = "int-21144";
+                document.getElementById('richads-pubid').value = "956231";
+                document.getElementById('richads-appid').value = "6162";
+                document.getElementById('adexium-reward-id').value = "30015b9a-df1e-4895-be7b-c5bc1b148fcf";
+                document.getElementById('adexium-interstitial-id').value = "d29f2549-2e28-4016-8b89-f36b11f66244";
+                document.getElementById('ad-timeout').value = "5";
                 document.getElementById('preload-ads').value = "true";
             }
         }
@@ -3275,23 +3402,25 @@
                 const gigapubId = document.getElementById('gigapub-id').value.trim();
                 
                 if (!gigapubId) {
-                    showAlert("❌ GigaPub ID is required to fix ad service issue!");
+                    showAlert("❌ GigaPub ID is required!");
                     return;
                 }
                 
                 const adNetworkConfig = {
                     gigapubId: gigapubId,
-                    adsgramRewardId: document.getElementById('adsgram-rewardid').value.trim(),
-                    adsgramInterstitialId: document.getElementById('adsgram-interstitialid').value.trim(),
+                    adsgramRewardId: document.getElementById('adsgram-rewardid').value.trim() || "21145",
+                    adsgramInterstitialId: document.getElementById('adsgram-interstitialid').value.trim() || "int-21144",
+                    richAdsPubId: document.getElementById('richads-pubid').value.trim() || "956231",
+                    richAdsAppId: document.getElementById('richads-appid').value.trim() || "6162",
+                    adexiumRewardId: document.getElementById('adexium-reward-id').value.trim() || "30015b9a-df1e-4895-be7b-c5bc1b148fcf",
+                    adexiumInterstitialId: document.getElementById('adexium-interstitial-id').value.trim() || "d29f2549-2e28-4016-8b89-f36b11f66244",
                     adTimeout: parseInt(document.getElementById('ad-timeout').value) || 5,
                     preloadAds: document.getElementById('preload-ads').value === "true",
                     updatedAt: serverTimestamp()
                 };
                 
-                // Save to Firebase
                 await setDoc(doc(db, "config", "adnetwork"), adNetworkConfig);
-                
-                showToast("✅ Ad network settings saved successfully! This will fix 'Ad service not available' error.");
+                showToast("✅ Ad network settings saved successfully! All 4 networks configured.");
                 
             } catch (error) {
                 console.error("Error saving ad network config:", error);
@@ -3761,6 +3890,36 @@
                         </div>
                     </div>
                     
+                    <!-- RichAds Configuration -->
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h2 class="text-xl font-bold mb-4 text-gray-800">RichAds Configuration (Always-On)</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-semibold text-gray-700">RichAds Publisher ID</label>
+                                <input type="text" id="richads-pubid-settings" class="input-field" value="956231" placeholder="Enter Publisher ID">
+                            </div>
+                            <div>
+                                <label class="font-semibold text-gray-700">RichAds App ID</label>
+                                <input type="text" id="richads-appid-settings" class="input-field" value="6162" placeholder="Enter App ID">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Adexium Configuration -->
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h2 class="text-xl font-bold mb-4 text-gray-800">Adexium Configuration (Always-On)</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-semibold text-gray-700">Adexium Reward Widget ID</label>
+                                <input type="text" id="adexium-reward-id-settings" class="input-field" value="30015b9a-df1e-4895-be7b-c5bc1b148fcf" placeholder="Enter Reward Widget ID">
+                            </div>
+                            <div>
+                                <label class="font-semibold text-gray-700">Adexium Interstitial Widget ID</label>
+                                <input type="text" id="adexium-interstitial-id-settings" class="input-field" value="d29f2549-2e28-4016-8b89-f36b11f66244" placeholder="Enter Interstitial Widget ID">
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="bg-white p-6 rounded-lg shadow">
                         <h2 class="text-xl font-bold mb-4 text-gray-800">IP Geolocation & Country Restrictions</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -3821,6 +3980,30 @@
             // Load existing settings
             await loadSettingsData();
             await loadWebsitesConfig();
+            
+            // Sync ad network values to settings fields
+            syncAdNetworkToSettings();
+        }
+
+        async function syncAdNetworkToSettings() {
+            try {
+                const configSnap = await getDoc(doc(db, "config", "adnetwork"));
+                if (configSnap.exists()) {
+                    const config = configSnap.data();
+                    
+                    const richadsPubField = document.getElementById('richads-pubid-settings');
+                    const richadsAppField = document.getElementById('richads-appid-settings');
+                    const adexiumRewardField = document.getElementById('adexium-reward-id-settings');
+                    const adexiumInterstitialField = document.getElementById('adexium-interstitial-id-settings');
+                    
+                    if (richadsPubField) richadsPubField.value = config.richAdsPubId || "956231";
+                    if (richadsAppField) richadsAppField.value = config.richAdsAppId || "6162";
+                    if (adexiumRewardField) adexiumRewardField.value = config.adexiumRewardId || "30015b9a-df1e-4895-be7b-c5bc1b148fcf";
+                    if (adexiumInterstitialField) adexiumInterstitialField.value = config.adexiumInterstitialId || "d29f2549-2e28-4016-8b89-f36b11f66244";
+                }
+            } catch (error) {
+                console.error("Error syncing ad network to settings:", error);
+            }
         }
 
         async function loadSettingsData() {
@@ -3991,6 +4174,9 @@
                 // Save to Firebase
                 await setDoc(doc(db, "config", "main"), settings);
                 
+                // Also update ad network settings from settings fields
+                await updateAdNetworkFromSettings();
+                
                 showToast("✅ All settings saved successfully!");
                 loadUsers(); // Refresh users to show updated daily ad limit
                 
@@ -3999,6 +4185,33 @@
                 showAlert("❌ Error saving settings: " + error.message, true);
             } finally {
                 loader.style.display = 'none';
+            }
+        }
+
+        async function updateAdNetworkFromSettings() {
+            try {
+                const richadsPubField = document.getElementById('richads-pubid-settings');
+                const richadsAppField = document.getElementById('richads-appid-settings');
+                const adexiumRewardField = document.getElementById('adexium-reward-id-settings');
+                const adexiumInterstitialField = document.getElementById('adexium-interstitial-id-settings');
+                
+                if (richadsPubField && richadsAppField && adexiumRewardField && adexiumInterstitialField) {
+                    const adNetworkRef = doc(db, "config", "adnetwork");
+                    const adNetworkSnap = await getDoc(adNetworkRef);
+                    
+                    if (adNetworkSnap.exists()) {
+                        await updateDoc(adNetworkRef, {
+                            richAdsPubId: richadsPubField.value.trim() || "956231",
+                            richAdsAppId: richadsAppField.value.trim() || "6162",
+                            adexiumRewardId: adexiumRewardField.value.trim() || "30015b9a-df1e-4895-be7b-c5bc1b148fcf",
+                            adexiumInterstitialId: adexiumInterstitialField.value.trim() || "d29f2549-2e28-4016-8b89-f36b11f66244",
+                            updatedAt: serverTimestamp()
+                        });
+                        console.log("✅ Ad network settings updated from settings page");
+                    }
+                }
+            } catch (error) {
+                console.error("Error updating ad network from settings:", error);
             }
         }
 
@@ -4280,12 +4493,30 @@
             currentViewingUserId = null;
         }
 
+        // Game Management Functions (placeholder)
+        async function loadGames() {
+            const page = document.getElementById('games');
+            page.innerHTML = `
+                <h1 class="text-3xl font-bold mb-6 text-gray-800">Game Management</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="game-card">
+                        <h2 class="text-xl font-bold mb-4">Color Game</h2>
+                        <p class="text-gray-600">Manage Color Game settings and limits</p>
+                    </div>
+                    <div class="game-card">
+                        <h2 class="text-xl font-bold mb-4">Watch Video</h2>
+                        <p class="text-gray-600">Manage Watch Video settings and limits</p>
+                    </div>
+                </div>
+            `;
+        }
+
         // Utility Functions
         function showAlert(message, isError = false) {
             const alertBox = document.getElementById('custom-alert');
             const msgEl = document.getElementById('alert-message');
             if (alertBox && msgEl) {
-                msgEl.textContent = message;
+                msgEl.innerHTML = message.replace(/\n/g, '<br>');
                 alertBox.classList.remove('hidden');
             }
         }
@@ -4381,6 +4612,7 @@
         window.saveAllSettings = saveAllSettings;
         window.saveAdNetworkConfig = saveAdNetworkConfig;
         window.testAllAdNetworks = testAllAdNetworks;
+        window.resetAdNetworkConfig = resetAdNetworkConfig;
         
         // Game Management functions
         window.openQuickSettings = openQuickSettings;
@@ -4392,6 +4624,18 @@
         window.hideAllGames = hideAllGames;
         window.syncAllGameSettings = syncAllGameSettings;
         window.resetAllGameStats = resetAllGameStats;
+        
+        // Placeholder functions
+        function resetUserPlayLimits() {}
+        function openQuickSettings() {}
+        function closeQuickSettingsModal() {}
+        function saveQuickGameSettings() {}
+        function applyGlobalPlayLimit() {}
+        function applyGlobalReward() {}
+        function showAllGames() {}
+        function hideAllGames() {}
+        function syncAllGameSettings() {}
+        function resetAllGameStats() {}
     </script>
 </body>
 </html>
