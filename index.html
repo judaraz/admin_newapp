@@ -485,6 +485,7 @@
       document.getElementById('saveGamesBtn')?.addEventListener('click', () => {
         document.querySelectorAll('[data-game]').forEach(el => {
           const key = el.dataset.game;
+          if (!appState.games[key]) appState.games[key] = {};
           if (el.type === 'checkbox') {
             appState.games[key].visible = el.checked;
           } else if (el.type === 'number') {
@@ -717,18 +718,34 @@
 
     // ---------- FIREBASE PUSH (sync to miniapp) ----------
     function pushToFirebase(section, data) {
-      // we store in config/games, config/main etc to match miniapp
+      // we store in config/main to match miniapp
       const ref = db.collection('config').doc('main');
       const payload = {};
-      if (section === 'games') payload.games = data;
-      else if (section === 'rewards') {
-        // merge rewards into main config
-        return ref.set({ ...data }, { merge: true }).then(() => {
+      
+      if (section === 'games') {
+        payload.games = data;
+      } else if (section === 'rewards') {
+        // Merge rewards into main config - these keys are used by miniapp
+        const rewardPayload = {
+          adWatchReward: data.adWatch,
+          colorGameReward: data.colorGame,
+          ludoGameCost: data.ludoMultiplier,
+          ludoWinMultiplier: data.ludoMultiplier,
+          tryYourLuckReward: data.luckReward,
+          socialReward: data.socialReward,
+          visitReward: data.visitReward,
+          minWithdrawal: data.minWithdraw,
+          coinValueCoins: data.coinValueCoins,
+          coinValueInr: data.coinValueInr,
+          referralBonus: data.referralBonus
+        };
+        return ref.set(rewardPayload, { merge: true }).then(() => {
           showToast('✅ Rewards synced');
+          updateTimestamp();
         }).catch(err => showToast('❌ Error: ' + err.message));
       } else if (section === 'lists') {
-        payload.websitesToVisit = data.websites;
-        payload.socialTasks = data.socialTasks;
+        payload.websitesToVisit = data.websites || [];
+        payload.socialTasks = data.socialTasks || [];
       } else if (section === 'banners') {
         payload.sliderBanners = data;
       } else if (section === 'notice') {
@@ -741,12 +758,14 @@
           cancelable: true
         }, { merge: true }).then(() => {
           showToast('📢 Notice synced');
+          updateTimestamp();
         }).catch(err => showToast('❌ Error: ' + err.message));
       } else if (section === 'country') {
-        payload.allowedCountries = data.allowed;
-        payload.ipinfoApiToken = data.ipinfoToken;
-        payload.blockedCountryMessage = data.blockMessage;
+        payload.allowedCountries = data.allowed || [];
+        payload.ipinfoApiToken = data.ipinfoToken || '';
+        payload.blockedCountryMessage = data.blockMessage || '';
       }
+      
       return ref.set(payload, { merge: true }).then(() => {
         showToast(`✅ ${section} synced`);
         updateTimestamp();
@@ -789,18 +808,61 @@
         const mainSnap = await db.collection('config').doc('main').get();
         if (mainSnap.exists) {
           const data = mainSnap.data();
-          if (data.games) appState.games = data.games;
-          if (data.websitesToVisit) appState.lists.websites = data.websitesToVisit;
-          if (data.socialTasks) appState.lists.socialTasks = data.socialTasks;
-          if (data.sliderBanners) appState.banners = data.sliderBanners;
+          
+          // Games config
+          if (data.games) {
+            // Map miniapp game IDs to admin state keys
+            const gameMap = {
+              ludoDice: 'ludo',
+              colorGame: 'color',
+              watchVideo: 'watch',
+              tryYourLuck: 'luck',
+              socialTasks: 'social',
+              visitWebsites: 'visit'
+            };
+            Object.keys(gameMap).forEach(miniId => {
+              if (data.games[miniId]) {
+                const adminKey = gameMap[miniId];
+                appState.games[adminKey] = {
+                  visible: data.games[miniId].visible !== false,
+                  dailyLimit: data.games[miniId].dailyPlayLimit || 0
+                };
+              }
+            });
+          }
+          
+          // Lists
+          if (data.websitesToVisit && Array.isArray(data.websitesToVisit)) {
+            appState.lists.websites = data.websitesToVisit;
+          }
+          if (data.socialTasks && Array.isArray(data.socialTasks)) {
+            appState.lists.socialTasks = data.socialTasks;
+          }
+          
+          // Banners
+          if (data.sliderBanners && Array.isArray(data.sliderBanners)) {
+            appState.banners = data.sliderBanners;
+          }
+          
+          // Country
           if (data.allowedCountries) appState.country.allowed = data.allowedCountries;
           if (data.ipinfoApiToken) appState.country.ipinfoToken = data.ipinfoApiToken;
           if (data.blockedCountryMessage) appState.country.blockMessage = data.blockedCountryMessage;
-          // rewards
-          const rewardKeys = ['adWatch','colorGame','ludoMultiplier','luckReward','socialReward','visitReward','minWithdraw','coinValueCoins','coinValueInr','referralBonus'];
-          rewardKeys.forEach(k => { if (data[k] !== undefined) appState.rewards[k] = data[k]; });
+          
+          // Rewards - map from miniapp keys to admin keys
+          if (data.adWatchReward !== undefined) appState.rewards.adWatch = data.adWatchReward;
+          if (data.colorGameReward !== undefined) appState.rewards.colorGame = data.colorGameReward;
+          if (data.ludoWinMultiplier !== undefined) appState.rewards.ludoMultiplier = data.ludoWinMultiplier;
+          if (data.tryYourLuckReward !== undefined) appState.rewards.luckReward = data.tryYourLuckReward;
+          if (data.socialReward !== undefined) appState.rewards.socialReward = data.socialReward;
+          if (data.visitReward !== undefined) appState.rewards.visitReward = data.visitReward;
+          if (data.minWithdrawal !== undefined) appState.rewards.minWithdraw = data.minWithdrawal;
+          if (data.coinValueCoins !== undefined) appState.rewards.coinValueCoins = data.coinValueCoins;
+          if (data.coinValueInr !== undefined) appState.rewards.coinValueInr = data.coinValueInr;
+          if (data.referralBonus !== undefined) appState.rewards.referralBonus = data.referralBonus;
         }
-        // notice
+        
+        // Notice
         const noticeSnap = await db.collection('config').doc('appNotice').get();
         if (noticeSnap.exists) {
           const n = noticeSnap.data();
@@ -808,12 +870,14 @@
           appState.notice.title = n.title || '';
           appState.notice.message = n.message || '';
         }
+        
         updateTimestamp();
         renderPage(currentPage);
         showToast('✅ Synced with Firebase');
       } catch (e) {
         console.warn('Firebase load error, using defaults', e);
         renderPage(currentPage);
+        showToast('⚠️ Using local defaults');
       }
     }
 
