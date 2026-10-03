@@ -3,12 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⭐ CashReward · Premium Admin</title>
-  <!-- Font Awesome 6 -->
+  <title>⭐ Games Hub · Premium Admin</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <!-- Google Font: Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Firebase SDKs (same as miniapp) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -16,18 +13,31 @@
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
       font-family: 'Poppins', sans-serif;
-      background: #0b0e1a;
+      background: #0a0e1a;
       color: #eef2f8;
       display: flex;
       min-height: 100vh;
     }
-    /* ----- SIDEBAR NAVIGATION ----- */
+    :root {
+      --brand: #00e5a0;
+      --brand-2: #00b8d4;
+      --brand-3: #7c3aed;
+      --card: rgba(20, 27, 51, 0.85);
+      --elev: rgba(30, 40, 70, 0.7);
+      --border: rgba(0, 229, 160, 0.15);
+      --text-dim: #94a3b8;
+      --text-mute: #64748b;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --warn: #f59e0b;
+    }
+    /* ----- SIDEBAR ----- */
     .sidebar {
       width: 260px;
       background: rgba(12, 16, 30, 0.95);
       backdrop-filter: blur(12px);
-      border-right: 1px solid rgba(250, 204, 21, 0.15);
-      padding: 28px 16px;
+      border-right: 1px solid var(--border);
+      padding: 24px 14px;
       display: flex;
       flex-direction: column;
       position: sticky;
@@ -38,164 +48,172 @@
       box-shadow: 8px 0 30px rgba(0,0,0,0.6);
     }
     .sidebar-brand {
-      font-size: 1.7rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #facc15, #f59e0b);
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      padding-bottom: 24px;
+      padding-bottom: 20px;
       border-bottom: 1px solid #1f2842;
-      margin-bottom: 28px;
+      margin-bottom: 22px;
       display: flex;
       align-items: center;
       gap: 10px;
     }
-    .sidebar-brand i { -webkit-text-fill-color: #facc15; font-size: 1.8rem; }
-    .nav-section { margin-bottom: 24px; }
+    .sidebar-brand i { -webkit-text-fill-color: var(--brand); font-size: 1.6rem; }
+    .nav-section { margin-bottom: 22px; }
     .nav-section-title {
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #6b7a9a;
+      letter-spacing: 1.2px;
+      color: #4a5670;
       padding-left: 12px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+      font-weight: 700;
     }
     .nav-item {
       display: flex;
       align-items: center;
-      gap: 14px;
-      padding: 10px 16px;
-      border-radius: 16px;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 12px;
       color: #b9c4dd;
       font-weight: 500;
       transition: 0.2s;
       cursor: pointer;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       text-decoration: none;
+      font-size: 0.88rem;
     }
-    .nav-item i { width: 22px; font-size: 1.1rem; color: #6b7a9a; transition: 0.2s; }
-    .nav-item:hover { background: rgba(250, 204, 21, 0.08); color: white; }
-    .nav-item:hover i { color: #facc15; }
+    .nav-item i { width: 20px; font-size: 1rem; color: #6b7a9a; transition: 0.2s; text-align: center; }
+    .nav-item:hover { background: rgba(0, 229, 160, 0.08); color: white; }
+    .nav-item:hover i { color: var(--brand); }
     .nav-item.active {
-      background: rgba(250, 204, 21, 0.15);
-      color: #facc15;
-      box-shadow: inset 4px 0 0 #facc15;
+      background: rgba(0, 229, 160, 0.13);
+      color: var(--brand);
+      box-shadow: inset 3px 0 0 var(--brand);
     }
-    .nav-item.active i { color: #facc15; }
-    .nav-item .badge {
-      margin-left: auto;
-      background: #facc15;
-      color: #0b0e1a;
-      font-size: 0.6rem;
-      font-weight: 700;
-      padding: 2px 10px;
-      border-radius: 40px;
-    }
+    .nav-item.active i { color: var(--brand); }
     .sidebar-footer {
       margin-top: auto;
       border-top: 1px solid #1f2842;
-      padding-top: 20px;
+      padding-top: 16px;
       font-size: 0.7rem;
       color: #4a5670;
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
-    .sidebar-footer .live-dot {
+    .live-dot {
       display: inline-block;
       width: 8px; height: 8px;
-      background: #22c55e;
+      background: var(--success);
       border-radius: 50%;
       margin-right: 6px;
-      box-shadow: 0 0 12px #22c55e88;
+      box-shadow: 0 0 12px rgba(34,197,94,0.5);
     }
 
-    /* ----- MAIN CONTENT ----- */
+    /* ----- MAIN ----- */
     .main-content {
       flex: 1;
-      padding: 28px 32px 40px;
+      padding: 26px 30px 40px;
       max-width: 1200px;
       margin: 0 auto;
+      min-width: 0;
     }
     .page-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      margin-bottom: 32px;
+      gap: 12px;
+      margin-bottom: 28px;
     }
     .page-header h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #facc15, #f59e0b);
+      font-size: 1.7rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     .page-header .sub {
-      color: #8b9ac0;
-      font-size: 0.9rem;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-top: 2px;
     }
     .config-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 28px;
+      gap: 22px;
     }
     .card {
-      background: rgba(20, 25, 45, 0.75);
-      backdrop-filter: blur(8px);
-      border-radius: 28px;
-      padding: 20px 24px 28px;
-      border: 1px solid rgba(255,215,0,0.08);
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 20px 22px 24px;
+      border: 1px solid var(--border);
       box-shadow: 0 10px 30px -8px rgba(0,0,0,0.6);
       transition: 0.25s ease;
     }
-    .card:hover { border-color: rgba(250,204,21,0.25); }
+    .card:hover { border-color: rgba(0,229,160,0.3); }
     .card h2 {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 18px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 16px;
       display: flex;
       align-items: center;
       gap: 10px;
-      color: #facc15;
-      border-bottom: 1px solid #2a324a;
+      color: var(--brand);
+      border-bottom: 1px solid #1f2842;
       padding-bottom: 12px;
     }
-    .card h2 i { color: #facc15; }
-    .field-group { display: flex; flex-direction: column; gap: 14px; margin-top: 6px; }
+    .card h2 i { color: var(--brand); }
+
+    .field-group { display: flex; flex-direction: column; gap: 12px; }
     .field-row {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 8px 12px;
-      background: #12182b;
-      padding: 8px 14px 8px 18px;
-      border-radius: 60px;
+      background: #0e1325;
+      padding: 8px 14px;
+      border-radius: 12px;
       border: 1px solid #262f47;
     }
-    .field-row label { font-weight: 500; font-size: 0.8rem; color: #b9c4dd; min-width: 80px; }
-    .field-row input, .field-row select {
+    .field-row label {
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: #b9c4dd;
+      min-width: 90px;
+      flex-shrink: 0;
+    }
+    .field-row input[type="text"],
+    .field-row input[type="number"],
+    .field-row input[type="email"],
+    .field-row select {
       flex: 1;
       background: transparent;
       border: none;
       color: white;
-      font-size: 0.9rem;
-      padding: 8px 0;
+      font-size: 0.88rem;
+      padding: 6px 0;
       outline: none;
-      min-width: 80px;
+      min-width: 60px;
+      font-family: inherit;
     }
     .field-row input::placeholder { color: #5b6a8a; }
     .field-row select option { background: #0b0e1a; }
+
+    /* Switch */
     .switch {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-left: auto;
     }
     .switch input[type="checkbox"] {
-      width: 40px; height: 22px;
+      width: 38px; height: 22px;
       appearance: none;
       background: #2d3650;
       border-radius: 40px;
@@ -203,8 +221,9 @@
       cursor: pointer;
       transition: 0.2s;
       flex-shrink: 0;
+      outline: none;
     }
-    .switch input[type="checkbox"]:checked { background: #facc15; }
+    .switch input[type="checkbox"]:checked { background: var(--brand); }
     .switch input[type="checkbox"]::after {
       content: '';
       position: absolute;
@@ -214,704 +233,1247 @@
       top: 3px; left: 3px;
       transition: 0.2s;
     }
-    .switch input[type="checkbox"]:checked::after { left: 21px; }
+    .switch input[type="checkbox"]:checked::after { left: 19px; }
+
+    /* Buttons */
     .btn {
-      background: #facc15;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
       border: none;
-      color: #0b0e1a;
+      color: #0a0e1a;
       font-weight: 700;
-      padding: 8px 20px;
-      border-radius: 40px;
+      padding: 9px 20px;
+      border-radius: 12px;
       cursor: pointer;
       transition: 0.2s;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.8rem;
-      box-shadow: 0 4px 14px #facc1540;
+      font-size: 0.82rem;
+      box-shadow: 0 4px 14px rgba(0,229,160,0.3);
+      font-family: inherit;
     }
-    .btn:hover { transform: scale(1.02); background: #fbbf24; }
-    .btn-outline { background: transparent; border: 1px solid #facc15; color: #facc15; box-shadow: none; }
-    .btn-outline:hover { background: #facc1515; }
-    .btn-sm { padding: 4px 14px; font-size: 0.7rem; }
-    .btn-danger { background: #ef4444; color: white; box-shadow: 0 4px 14px #ef444440; }
-    .btn-danger:hover { background: #dc2626; }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,229,160,0.45); }
+    .btn:active { transform: translateY(0); }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--brand);
+      color: var(--brand);
+      box-shadow: none;
+    }
+    .btn-outline:hover { background: rgba(0,229,160,0.08); }
+    .btn-sm { padding: 5px 14px; font-size: 0.72rem; }
+    .btn-danger {
+      background: linear-gradient(135deg, var(--danger), #b91c1c);
+      color: white;
+      box-shadow: 0 4px 14px rgba(239,68,68,0.3);
+    }
+    .btn-danger:hover { box-shadow: 0 6px 18px rgba(239,68,68,0.45); }
+
+    /* List items */
     .list-item {
       background: #0e1325;
-      border-radius: 40px;
-      padding: 10px 16px;
-      margin-bottom: 10px;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      border-left: 3px solid #facc15;
+      border-left: 3px solid var(--brand);
       gap: 8px;
     }
-    .list-item .info { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 0.8rem; }
-    .list-item .info strong { color: #facc15; }
-    .empty-state { color: #6b7a9a; font-style: italic; padding: 8px 0; }
-    .mt-2 { margin-top: 16px; }
-    .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-    .text-gold { color: #facc15; }
-    .text-muted { color: #9aa9c9; }
-    hr { border-color: #1f2842; margin: 14px 0; }
+    .list-item .info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 14px;
+      font-size: 0.8rem;
+      align-items: center;
+    }
+    .list-item .info strong { color: var(--brand); }
+
+    .empty-state {
+      color: var(--text-mute);
+      font-style: italic;
+      padding: 12px 0;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+    .pill-success { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .pill-warn { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .pill-danger { background: rgba(239,68,68,0.15); color: #f87171; }
+    .pill-info { background: rgba(59,130,246,0.15); color: #60a5fa; }
+
+    /* Toast */
     .toast {
-      position: fixed; bottom: 30px; right: 30px;
-      background: #1e293b; padding: 14px 28px;
-      border-radius: 60px; border-left: 6px solid #facc15;
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e293b;
+      padding: 12px 24px;
+      border-radius: 12px;
+      border-left: 4px solid var(--brand);
       box-shadow: 0 12px 40px rgba(0,0,0,0.7);
-      font-weight: 500; display: flex; align-items: center; gap: 12px;
-      z-index: 999; transform: translateY(80px); opacity: 0;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 999;
+      transform: translateY(80px);
+      opacity: 0;
       transition: 0.3s ease;
+      font-size: 0.85rem;
+      max-width: 320px;
     }
     .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.error { border-left-color: var(--danger); }
+    .toast.error i { color: var(--danger); }
 
-    /* responsive */
+    hr { border:none; border-top:1px solid #1f2842; margin:14px 0; }
+
+    /* Divider text */
+    .divider-text {
+      color: var(--text-mute);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 6px 0;
+      font-weight: 600;
+    }
+
+    /* Order badge */
+    .order-badge {
+      background: rgba(0,229,160,0.15);
+      color: var(--brand);
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    /* Responsive */
     @media (max-width: 768px) {
       .sidebar { width: 72px; padding: 16px 8px; }
-      .sidebar-brand span, .nav-item span, .nav-section-title, .sidebar-footer span, .badge { display: none; }
-      .sidebar-brand i { font-size: 2rem; }
+      .sidebar-brand span,
+      .nav-item span,
+      .nav-section-title,
+      .sidebar-footer div span:last-child { display: none; }
+      .sidebar-brand { justify-content: center; padding-bottom: 14px; }
+      .sidebar-brand i { font-size: 1.8rem; }
       .nav-item { justify-content: center; padding: 12px; }
-      .nav-item i { font-size: 1.4rem; }
-      .main-content { padding: 16px; }
+      .nav-item i { font-size: 1.3rem; }
+      .nav-section { margin-bottom: 12px; }
+      .main-content { padding: 18px 14px; }
       .config-grid { grid-template-columns: 1fr; }
+      .page-header h1 { font-size: 1.4rem; }
     }
   </style>
 </head>
 <body>
 
-<!-- SIDEBAR NAVIGATION -->
+<!-- ============ SIDEBAR ============ -->
 <nav class="sidebar">
   <div class="sidebar-brand">
     <i class="fas fa-crown"></i>
-    <span>CashReward</span>
+    <span>Games Hub</span>
   </div>
 
   <div class="nav-section">
-    <div class="nav-section-title">Main</div>
+    <div class="nav-section-title">Overview</div>
     <a class="nav-item active" data-page="dashboard"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
-    <a class="nav-item" data-page="games"><i class="fas fa-gamepad"></i><span>Games & Limits</span></a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Configuration</div>
+    <a class="nav-item" data-page="ads"><i class="fas fa-ad"></i><span>Ad Networks</span></a>
+    <a class="nav-item" data-page="games"><i class="fas fa-gamepad"></i><span>Games</span></a>
     <a class="nav-item" data-page="rewards"><i class="fas fa-coins"></i><span>Rewards</span></a>
-    <a class="nav-item" data-page="content"><i class="fas fa-link"></i><span>Content Lists</span></a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Content</div>
+    <a class="nav-item" data-page="content"><i class="fas fa-link"></i><span>Websites & Tasks</span></a>
+    <a class="nav-item" data-page="banners"><i class="fas fa-images"></i><span>Banners</span></a>
   </div>
 
   <div class="nav-section">
     <div class="nav-section-title">Engagement</div>
-    <a class="nav-item" data-page="banners"><i class="fas fa-images"></i><span>Slider Banners</span></a>
     <a class="nav-item" data-page="notice"><i class="fas fa-bullhorn"></i><span>Notice & Referral</span></a>
     <a class="nav-item" data-page="country"><i class="fas fa-globe-americas"></i><span>Country Access</span></a>
   </div>
 
   <div class="sidebar-footer">
-    <div><span class="live-dot"></span> <span id="connStatus">Connected</span></div>
+    <div><span class="live-dot"></span><span id="connStatus">Connected</span></div>
     <div><i class="far fa-clock"></i> <span id="lastUpdate">just now</span></div>
   </div>
 </nav>
 
-<!-- MAIN CONTENT -->
-<div class="main-content" id="mainContent">
-  <!-- header -->
+<!-- ============ MAIN ============ -->
+<div class="main-content">
   <div class="page-header">
     <div>
       <h1 id="pageTitle">Dashboard</h1>
-      <div class="sub" id="pageSub">Manage your mini‑app from one place</div>
+      <div class="sub" id="pageSub">Manage your app from one place</div>
     </div>
-    <div style="display:flex; gap:10px;">
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
       <button class="btn btn-outline btn-sm" id="refreshBtn"><i class="fas fa-sync-alt"></i> Sync</button>
       <button class="btn btn-sm" id="saveAllBtn"><i class="fas fa-save"></i> Save All</button>
     </div>
   </div>
 
-  <!-- dynamic pages will be rendered here -->
   <div id="pageContainer"></div>
 </div>
 
-<!-- TOAST -->
-<div id="toast" class="toast"><i class="fas fa-check-circle" style="color:#facc15;"></i> <span id="toastMsg">Saved</span></div>
+<!-- ============ TOAST ============ -->
+<div id="toast" class="toast">
+  <i class="fas fa-check-circle" style="color:var(--brand);"></i>
+  <span id="toastMsg">Saved</span>
+</div>
 
 <script>
-  (function() {
-    "use strict";
+(function() {
+  "use strict";
 
-    // ---------- FIREBASE CONFIG (same as miniapp) ----------
-    const firebaseConfig = {
-      apiKey: "AIzaSyBEvTvWy-hH1HHgjoOhUKkj-Dglm11Oc8U",
-      authDomain: "cash-rewards-01-624ae.firebaseapp.com",
-      projectId: "cash-rewards-01-624ae",
-      storageBucket: "cash-rewards-01-624ae.firebasestorage.app",
-      messagingSenderId: "29119912449",
-      appId: "1:29119912449:web:e0c68c1994ff0a71603e00"
-    };
+  // ====================================================
+  // FIREBASE
+  // ====================================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyBEvTvWy-hH1HHgjoOhUKkj-Dglm11Oc8U",
+    authDomain: "cash-rewards-01-624ae.firebaseapp.com",
+    projectId: "cash-rewards-01-624ae",
+    storageBucket: "cash-rewards-01-624ae.firebasestorage.app",
+    messagingSenderId: "29119912449",
+    appId: "1:29119912449:web:e0c68c1994ff0a71603e00"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+  // ====================================================
+  // STATE — mirrors miniapp Firebase structure
+  // ====================================================
+  let appState = {
+    // Games -> maps to config/games (miniapp keys: ludoDice, colorGame, watchVideo, tryYourLuck)
+    games: {
+      ludo:        { visible: true, dailyPlayLimit: 5, gameCost: 10, winMultiplier: 10 },
+      color:       { visible: true, dailyPlayLimit: 8, rewardPerPlay: 100 },
+      watch:       { visible: true, dailyPlayLimit: 10, rewardPerPlay: 50 },
+      luck:        { visible: true, dailyPlayLimit: 3, rewardPerPlay: 500 },
+      social:      { visible: true },
+      visit:       { visible: true }
+    },
+    // Ads -> config/ads
+    ads: {
+      gigapub:              { enabled: true, order: 1 },
+      adsgramReward:        { enabled: true, order: 2 },
+      adsgramInterstitial:  { enabled: true, order: 3 }
+    },
+    // Rewards -> config/main
+    rewards: {
+      adWatch: 50,
+      colorGame: 100,
+      ludoMultiplier: 10,
+      ludoGameCost: 10,
+      luckReward: 500,
+      socialReward: 30,
+      visitReward: 15,
+      minWithdraw: 1000,
+      coinValueCoins: 1000,
+      coinValueInr: 10,
+      referralBonus: 100,
+      adsgramRewardId: '21768',
+      adsgramInterstitialId: 'int-21769'
+    },
+    lists: {
+      websites: [],
+      socialTasks: []
+    },
+    banners: [],
+    country: { allowed: [], ipinfoToken: '', blockMessage: 'Not available in your country' },
+    notice: { enabled: false, title: '', message: '', type: 'info', cancelable: true }
+  };
 
-    // ---------- STATE (in-memory cache) ----------
-    let appState = {
-      games: {
-        ludo: { visible: true, dailyLimit: 5 },
-        color: { visible: true, dailyLimit: 8 },
-        watch: { visible: true, dailyLimit: 10 },
-        luck: { visible: true, dailyLimit: 3 },
-        social: { visible: true },
-        visit: { visible: true }
-      },
-      rewards: {
-        adWatch: 50,
-        colorGame: 100,
-        ludoMultiplier: 10,
-        luckReward: 500,
-        socialReward: 30,
-        visitReward: 15,
-        minWithdraw: 1000,
-        coinValueCoins: 1000,
-        coinValueInr: 10,
-        referralBonus: 100
-      },
-      lists: {
-        websites: [
-          { name: 'Google', link: 'https://www.google.com', reward: 10, timer: 30 },
-          { name: 'YouTube', link: 'https://www.youtube.com', reward: 15, timer: 45 },
-          { name: 'Facebook', link: 'https://www.facebook.com', reward: 20, timer: 60 }
-        ],
-        socialTasks: [
-          { name: 'Telegram Channel', link: 'https://t.me/example', reward: 30, icon: 'telegram' },
-          { name: 'YouTube Subscribe', link: 'https://youtube.com', reward: 40, icon: 'youtube' }
-        ]
-      },
-      banners: [
-        { img: 'https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop', link: '#' },
-        { img: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?q=80&w=400&auto=format&fit=crop', link: '#' },
-        { img: 'https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=400&auto=format&fit=crop', link: '#' }
-      ],
-      country: {
-        allowed: ['in', 'us', 'gb'],
-        ipinfoToken: '',
-        blockMessage: 'Not available in your country'
-      },
-      notice: { enabled: false, title: '', message: '' }
-    };
+  // ====================================================
+  // NAVIGATION
+  // ====================================================
+  const pages = ['dashboard', 'ads', 'games', 'rewards', 'content', 'banners', 'notice', 'country'];
+  const titles = {
+    dashboard: ['Dashboard', 'Real-time overview'],
+    ads:       ['Ad Networks', 'Control which ads are shown and in what order'],
+    games:     ['Games & Limits', 'Visibility, cost, daily limits'],
+    rewards:   ['Rewards & Coin Values', 'Points earned per action'],
+    content:   ['Content Lists', 'Websites and social tasks'],
+    banners:   ['Slider Banners', 'Home page carousel'],
+    notice:    ['Notice & Referral', 'App-wide announcements'],
+    country:   ['Country Access', 'Geo-blocking and IPinfo integration']
+  };
+  let currentPage = 'dashboard';
 
-    // ---------- NAVIGATION ----------
-    const pages = ['dashboard', 'games', 'rewards', 'content', 'banners', 'notice', 'country'];
-    let currentPage = 'dashboard';
+  function navigateTo(page) {
+    if (!pages.includes(page)) return;
+    currentPage = page;
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelector(`.nav-item[data-page="${page}"]`)?.classList.add('active');
+    const [title, sub] = titles[page] || ['Dashboard', ''];
+    document.getElementById('pageTitle').textContent = title;
+    document.getElementById('pageSub').textContent = sub;
+    renderPage(page);
+  }
 
-    function navigateTo(page) {
-      if (!pages.includes(page)) return;
-      currentPage = page;
-      // update sidebar
-      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-      document.querySelector(`.nav-item[data-page="${page}"]`)?.classList.add('active');
-      // page title
-      const titles = {
-        dashboard: 'Dashboard',
-        games: 'Games & Limits',
-        rewards: 'Rewards & Coins',
-        content: 'Content Lists',
-        banners: 'Slider Banners',
-        notice: 'Notice & Referral',
-        country: 'Country Access'
+  function renderPage(page) {
+    const c = document.getElementById('pageContainer');
+    switch (page) {
+      case 'dashboard': renderDashboard(c); break;
+      case 'ads':       renderAds(c); break;
+      case 'games':     renderGames(c); break;
+      case 'rewards':   renderRewards(c); break;
+      case 'content':   renderContent(c); break;
+      case 'banners':   renderBanners(c); break;
+      case 'notice':    renderNotice(c); break;
+      case 'country':   renderCountry(c); break;
+    }
+  }
+
+  // ====================================================
+  // DASHBOARD
+  // ====================================================
+  function renderDashboard(c) {
+    const enabledAds = Object.entries(appState.ads).filter(([, v]) => v.enabled).length;
+    const totalAds = Object.keys(appState.ads).length;
+    c.innerHTML = `
+      <div class="config-grid">
+        <div class="card">
+          <h2><i class="fas fa-chart-line"></i> Overview</h2>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div style="background:#0e1325; border-radius:14px; padding:14px;">
+              <div style="color:#8b9ac0; font-size:0.7rem;">Active Ads</div>
+              <div style="font-size:1.6rem; font-weight:800; color:var(--brand);">${enabledAds}/${totalAds}</div>
+            </div>
+            <div style="background:#0e1325; border-radius:14px; padding:14px;">
+              <div style="color:#8b9ac0; font-size:0.7rem;">Websites</div>
+              <div style="font-size:1.6rem; font-weight:800; color:var(--brand);">${appState.lists.websites.length}</div>
+            </div>
+            <div style="background:#0e1325; border-radius:14px; padding:14px;">
+              <div style="color:#8b9ac0; font-size:0.7rem;">Social Tasks</div>
+              <div style="font-size:1.6rem; font-weight:800; color:var(--brand);">${appState.lists.socialTasks.length}</div>
+            </div>
+            <div style="background:#0e1325; border-radius:14px; padding:14px;">
+              <div style="color:#8b9ac0; font-size:0.7rem;">Banners</div>
+              <div style="font-size:1.6rem; font-weight:800; color:var(--brand);">${appState.banners.length}</div>
+            </div>
+          </div>
+          <div style="margin-top:14px; background:#0e1325; border-radius:14px; padding:12px 14px; font-size:0.78rem;">
+            <span style="color:#8b9ac0;">💎 Min Withdraw</span>
+            <strong style="color:var(--brand);">${appState.rewards.minWithdraw}</strong>
+            &nbsp;·&nbsp;
+            <span style="color:#8b9ac0;">🪙 ${appState.rewards.coinValueCoins} coins = ₹${appState.rewards.coinValueInr}</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
+          <div class="field-group">
+            <button class="btn" id="quickResetBtn"><i class="fas fa-redo-alt"></i> Reset All Daily Limits</button>
+            <button class="btn btn-outline" id="quickAdsBtn"><i class="fas fa-ad"></i> Manage Ad Networks</button>
+            <button class="btn btn-outline" id="quickNoticeBtn"><i class="fas fa-bullhorn"></i> Publish Notice</button>
+            <button class="btn btn-outline" id="quickResetVisitsBtn"><i class="fas fa-globe"></i> Reset Website Visits</button>
+          </div>
+        </div>
+
+        <div class="card" style="grid-column: 1 / -1;">
+          <h2><i class="fas fa-info-circle"></i> Ad Rotation Explained</h2>
+          <p style="color:#8b9ac0; font-size:0.82rem; line-height:1.6;">
+            The miniapp tries each <b>enabled</b> ad network in the order you set (lower number = tried first).
+            If one fails or is unavailable, it automatically falls back to the next one. At least one network
+            should be enabled for games to work.
+          </p>
+        </div>
+      </div>
+    `;
+    document.getElementById('quickResetBtn').onclick = resetAllLimits;
+    document.getElementById('quickAdsBtn').onclick = () => navigateTo('ads');
+    document.getElementById('quickNoticeBtn').onclick = () => navigateTo('notice');
+    document.getElementById('quickResetVisitsBtn').onclick = resetWebsiteVisits;
+  }
+
+  // ====================================================
+  // AD NETWORKS  ⭐ NEW
+  // ====================================================
+  function renderAds(c) {
+    const a = appState.ads;
+    const providers = [
+      { key: 'gigapub',             label: 'Gigapub',              desc: 'Rewarded/interstitial ad network' },
+      { key: 'adsgramReward',       label: 'AdsGram Reward',       desc: 'Rewarded video (best conversion)' },
+      { key: 'adsgramInterstitial', label: 'AdsGram Interstitial', desc: 'Full-screen interstitial' }
+    ];
+
+    c.innerHTML = `
+      <div class="card" style="margin-bottom:20px;">
+        <h2><i class="fas fa-ad"></i> Ad Network Rotation</h2>
+        <p style="color:#8b9ac0; font-size:0.82rem; line-height:1.6; margin-bottom:16px;">
+          Enable the ad networks you want. The miniapp tries them in the order shown below
+          (lower number = tried first). If a network fails, it falls back to the next enabled one.
+        </p>
+
+        <div class="field-group">
+          ${providers.map((p, i) => {
+            const cfg = a[p.key] || { enabled: true, order: i + 1 };
+            return `
+              <div class="field-row" style="padding:12px 16px;">
+                <div class="order-badge">${cfg.order}</div>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-weight:700; font-size:0.9rem; color:#eef2f8;">${p.label}</div>
+                  <div style="color:#6b7a9a; font-size:0.72rem; margin-top:2px;">${p.desc}</div>
+                </div>
+                <div class="switch">
+                  <input type="checkbox" data-ad="${p.key}" ${cfg.enabled ? 'checked' : ''}>
+                </div>
+                <div style="display:flex; align-items:center; gap:4px;">
+                  <span style="color:#6b7a9a; font-size:0.7rem;">Order</span>
+                  <input type="number" data-ad-order="${p.key}" value="${cfg.order}" min="1" max="9"
+                         style="width:44px; text-align:center; background:#0e1325; border:1px solid #262f47; border-radius:6px; padding:4px; color:white; font-family:inherit;">
+                </div>
+              </div>
+            `;
+          }).join('')}
+
+          <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:12px; padding:12px 14px; margin-top:6px;">
+            <div style="color:var(--warn); font-weight:700; font-size:0.8rem; margin-bottom:6px;">
+              <i class="fas fa-exclamation-triangle"></i> Important
+            </div>
+            <ul style="color:#94a3b8; font-size:0.75rem; line-height:1.7; list-style:none; padding-left:0;">
+              <li>• At least <b>one</b> network must stay enabled.</li>
+              <li>• AdsGram ID below must match the miniapp.</li>
+              <li>• Changes sync to users within seconds.</li>
+            </ul>
+          </div>
+
+          <button class="btn" id="saveAdsBtn" style="margin-top:8px;">
+            <i class="fas fa-save"></i> Save Ad Configuration
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><i class="fas fa-key"></i> Ad Network IDs</h2>
+        <div class="field-group">
+          <div class="field-row">
+            <label>AdsGram Reward ID</label>
+            <input type="text" id="adsgramRewardId" value="${appState.rewards.adsgramRewardId || '21768'}" placeholder="21768">
+          </div>
+          <div class="field-row">
+            <label>AdsGram Interstitial ID</label>
+            <input type="text" id="adsgramInterstitialId" value="${appState.rewards.adsgramInterstitialId || 'int-21769'}" placeholder="int-21769">
+          </div>
+          <div class="field-row">
+            <label>Gigapub Script ID</label>
+            <input type="text" id="gigapubScriptId" value="${appState.rewards.gigapubScriptId || '1794'}" placeholder="1794">
+          </div>
+          <button class="btn" id="saveAdIdsBtn"><i class="fas fa-save"></i> Save Ad IDs</button>
+        </div>
+        <p style="color:#6b7a9a; font-size:0.72rem; margin-top:12px; line-height:1.5;">
+          ⚠️ These IDs are embedded in the miniapp. Changing them here updates the config
+          but the SDK init still uses the IDs in the HTML file. To change SDK IDs, edit the miniapp HTML.
+        </p>
+      </div>
+    `;
+
+    document.getElementById('saveAdsBtn').onclick = saveAds;
+    document.getElementById('saveAdIdsBtn').onclick = saveAdIds;
+  }
+
+  function saveAds() {
+    const newAds = {};
+    document.querySelectorAll('[data-ad]').forEach(cb => {
+      const k = cb.dataset.ad;
+      const orderEl = document.querySelector(`[data-ad-order="${k}"]`);
+      newAds[k] = {
+        enabled: cb.checked,
+        order: parseInt(orderEl.value) || 1
       };
-      document.getElementById('pageTitle').textContent = titles[page] || 'Dashboard';
-      document.getElementById('pageSub').textContent = page === 'dashboard' ? 'Real‑time admin overview' : 'Manage settings';
-      renderPage(page);
+    });
+    // Ensure at least one enabled
+    if (!Object.values(newAds).some(v => v.enabled)) {
+      showToast('❌ Enable at least one ad network', true);
+      return;
     }
+    appState.ads = newAds;
+    db.collection('config').doc('ads').set(newAds, { merge: true })
+      .then(() => {
+        showToast('✅ Ad rotation saved');
+        updateTimestamp();
+        renderAds(document.getElementById('pageContainer'));
+      })
+      .catch(err => showToast('❌ ' + err.message, true));
+  }
 
-    // ---------- RENDER ENGINE ----------
-    function renderPage(page) {
-      const container = document.getElementById('pageContainer');
-      switch(page) {
-        case 'dashboard': renderDashboard(container); break;
-        case 'games': renderGames(container); break;
-        case 'rewards': renderRewards(container); break;
-        case 'content': renderContent(container); break;
-        case 'banners': renderBanners(container); break;
-        case 'notice': renderNotice(container); break;
-        case 'country': renderCountry(container); break;
-        default: container.innerHTML = '<div class="card"><p>Page not found</p></div>';
-      }
-    }
+  function saveAdIds() {
+    const payload = {
+      adsgramRewardId: document.getElementById('adsgramRewardId').value.trim(),
+      adsgramInterstitialId: document.getElementById('adsgramInterstitialId').value.trim(),
+      gigapubScriptId: document.getElementById('gigapubScriptId').value.trim()
+    };
+    appState.rewards.adsgramRewardId = payload.adsgramRewardId;
+    appState.rewards.adsgramInterstitialId = payload.adsgramInterstitialId;
+    appState.rewards.gigapubScriptId = payload.gigapubScriptId;
+    db.collection('config').doc('main').set(payload, { merge: true })
+      .then(() => showToast('✅ Ad IDs saved'))
+      .catch(err => showToast('❌ ' + err.message, true));
+  }
 
-    // ---- DASHBOARD ----
-    function renderDashboard(container) {
-      container.innerHTML = `
-        <div class="config-grid">
-          <div class="card"><h2><i class="fas fa-chart-line"></i> Quick Stats</h2>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-              <div style="background:#0e1325; border-radius:20px; padding:16px;"><span style="color:#8b9ac0;">Games</span><div style="font-size:1.8rem; font-weight:700; color:#facc15;">6</div></div>
-              <div style="background:#0e1325; border-radius:20px; padding:16px;"><span style="color:#8b9ac0;">Websites</span><div style="font-size:1.8rem; font-weight:700; color:#facc15;">${appState.lists.websites.length}</div></div>
-              <div style="background:#0e1325; border-radius:20px; padding:16px;"><span style="color:#8b9ac0;">Social Tasks</span><div style="font-size:1.8rem; font-weight:700; color:#facc15;">${appState.lists.socialTasks.length}</div></div>
-              <div style="background:#0e1325; border-radius:20px; padding:16px;"><span style="color:#8b9ac0;">Banners</span><div style="font-size:1.8rem; font-weight:700; color:#facc15;">${appState.banners.length}</div></div>
+  // ====================================================
+  // GAMES
+  // ====================================================
+  function renderGames(c) {
+    const g = appState.games;
+    const rows = [
+      { key: 'ludo',   label: '🎲 Ludo Dice',    extras: ['gameCost', 'winMultiplier'] },
+      { key: 'color',  label: '🎨 Color Match',  extras: ['rewardPerPlay'] },
+      { key: 'watch',  label: '📺 Watch & Earn', extras: ['rewardPerPlay'] },
+      { key: 'luck',   label: '🍀 Try Your Luck',extras: ['rewardPerPlay'] },
+      { key: 'social', label: '📱 Social Tasks', extras: [] },
+      { key: 'visit',  label: '🌐 Visit & Earn', extras: [] }
+    ];
+
+    c.innerHTML = `
+      <div class="card">
+        <h2><i class="fas fa-gamepad"></i> Games & Daily Limits</h2>
+        <div class="field-group">
+          ${rows.map(r => {
+            const cfg = g[r.key] || {};
+            const hasLimit = ['ludo','color','watch','luck'].includes(r.key);
+            return `
+              <div style="background:#0e1325; border-radius:14px; padding:14px 16px; border:1px solid #262f47;">
+                <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                  <div style="flex:1; min-width:120px;">
+                    <div style="font-weight:700; font-size:0.9rem;">${r.label}</div>
+                    <div style="color:#6b7a9a; font-size:0.7rem; margin-top:2px;">
+                      ${cfg.visible !== false ? 'Visible' : 'Hidden'}
+                      ${hasLimit ? ' · Limit: ' + (cfg.dailyPlayLimit || 0) + '/day' : ''}
+                    </div>
+                  </div>
+                  <div class="switch">
+                    <input type="checkbox" data-game-visible="${r.key}" ${cfg.visible !== false ? 'checked' : ''}>
+                  </div>
+                </div>
+                ${hasLimit ? `
+                  <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
+                    <div style="flex:1; min-width:110px;">
+                      <label style="color:#6b7a9a; font-size:0.68rem; display:block; margin-bottom:4px;">Daily Limit</label>
+                      <input type="number" data-game-limit="${r.key}" value="${cfg.dailyPlayLimit || 0}" min="0"
+                             style="width:100%; background:#0a0e1a; border:1px solid #262f47; border-radius:8px; padding:8px 10px; color:white; font-family:inherit; font-size:0.85rem;">
+                    </div>
+                    ${r.extras.map(extra => {
+                      const labels = {
+                        gameCost: 'Entry Cost',
+                        winMultiplier: 'Win Multiplier',
+                        rewardPerPlay: 'Reward/Play'
+                      };
+                      return `
+                        <div style="flex:1; min-width:110px;">
+                          <label style="color:#6b7a9a; font-size:0.68rem; display:block; margin-bottom:4px;">${labels[extra] || extra}</label>
+                          <input type="number" data-game-extra="${r.key}:${extra}" value="${cfg[extra] || 0}" min="0"
+                                 style="width:100%; background:#0a0e1a; border:1px solid #262f47; border-radius:8px; padding:8px 10px; color:white; font-family:inherit; font-size:0.85rem;">
+                        </div>
+                      `;
+                    }).join('')}
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }).join('')}
+          <button class="btn" id="saveGamesBtn" style="margin-top:8px;">
+            <i class="fas fa-save"></i> Save Game Config
+          </button>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('saveGamesBtn').onclick = saveGames;
+  }
+
+  function saveGames() {
+    const newGames = JSON.parse(JSON.stringify(appState.games));
+    document.querySelectorAll('[data-game-visible]').forEach(cb => {
+      const k = cb.dataset.gameVisible;
+      if (!newGames[k]) newGames[k] = {};
+      newGames[k].visible = cb.checked;
+    });
+    document.querySelectorAll('[data-game-limit]').forEach(inp => {
+      const k = inp.dataset.gameLimit;
+      if (!newGames[k]) newGames[k] = {};
+      newGames[k].dailyPlayLimit = parseInt(inp.value) || 0;
+    });
+    document.querySelectorAll('[data-game-extra]').forEach(inp => {
+      const [k, field] = inp.dataset.gameExtra.split(':');
+      if (!newGames[k]) newGames[k] = {};
+      newGames[k][field] = parseFloat(inp.value) || 0;
+    });
+
+    appState.games = newGames;
+    pushGamesToFirebase(newGames)
+      .then(() => showToast('✅ Game config saved'))
+      .catch(err => showToast('❌ ' + err.message, true));
+  }
+
+  /**
+   * Push games in the miniapp format (config/games doc).
+   * Miniapp uses: ludoDice, colorGame, watchVideo, tryYourLuck, socialTasks, visitWebsites
+   */
+  function pushGamesToFirebase(games) {
+    const payload = {
+      ludoDice: {
+        visible: games.ludo.visible !== false,
+        dailyPlayLimit: games.ludo.dailyPlayLimit || 0,
+        gameCost: games.ludo.gameCost || 10,
+        winMultiplier: games.ludo.winMultiplier || 10
+      },
+      colorGame: {
+        visible: games.color.visible !== false,
+        dailyPlayLimit: games.color.dailyPlayLimit || 0,
+        rewardPerPlay: games.color.rewardPerPlay || 100
+      },
+      watchVideo: {
+        visible: games.watch.visible !== false,
+        dailyPlayLimit: games.watch.dailyPlayLimit || 0,
+        rewardPerPlay: games.watch.rewardPerPlay || 50
+      },
+      tryYourLuck: {
+        visible: games.luck.visible !== false,
+        dailyPlayLimit: games.luck.dailyPlayLimit || 0,
+        rewardPerPlay: games.luck.rewardPerPlay || 500
+      },
+      socialTasks: {
+        visible: games.social.visible !== false
+      },
+      visitWebsites: {
+        visible: games.visit.visible !== false
+      },
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    return db.collection('config').doc('games').set(payload, { merge: true });
+  }
+
+  // ====================================================
+  // REWARDS
+  // ====================================================
+  function renderRewards(c) {
+    const r = appState.rewards;
+    const fields = [
+      { key: 'adWatch',       label: '💰 Ad Watch Reward',       step: 5 },
+      { key: 'colorGame',     label: '🎨 Color Game Reward',     step: 5 },
+      { key: 'ludoGameCost',  label: '🎲 Ludo Entry Cost',       step: 5 },
+      { key: 'ludoMultiplier',label: '🎲 Ludo Win Multiplier',   step: 1 },
+      { key: 'luckReward',    label: '🍀 Try Luck Reward',       step: 10 },
+      { key: 'socialReward',  label: '📱 Social Task Reward',    step: 5 },
+      { key: 'visitReward',   label: '🌐 Visit Site Reward',     step: 5 }
+    ];
+    c.innerHTML = `
+      <div class="card">
+        <h2><i class="fas fa-coins"></i> Rewards & Coin Values</h2>
+        <div class="field-group">
+          ${fields.map(f => `
+            <div class="field-row">
+              <label>${f.label}</label>
+              <input type="number" id="rw_${f.key}" value="${r[f.key] || 0}" step="${f.step}">
             </div>
-            <div style="margin-top:16px; background:#0e1325; border-radius:20px; padding:14px;">
-              <span style="color:#8b9ac0;">💎 Min Withdraw</span> <strong class="text-gold">${appState.rewards.minWithdraw}</strong> &nbsp;|&nbsp;
-              <span style="color:#8b9ac0;">🪙 ${appState.rewards.coinValueCoins} coins = ₹${appState.rewards.coinValueInr}</span>
-            </div>
+          `).join('')}
+          <hr>
+          <div class="divider-text">Withdrawal</div>
+          <div class="field-row">
+            <label>💎 Min Withdrawal</label>
+            <input type="number" id="rw_minWithdraw" value="${r.minWithdraw}" step="100">
           </div>
-          <div class="card"><h2><i class="fas fa-bolt"></i> Actions</h2>
-            <button class="btn" id="quickResetBtn"><i class="fas fa-redo-alt"></i> Reset All Limits (today)</button>
-            <button class="btn btn-outline" id="quickNoticeBtn" style="margin-top:10px;"><i class="fas fa-bullhorn"></i> Publish Notice</button>
-            <p style="margin-top:14px; font-size:0.8rem; color:#6b7a9a;">Connected to Firebase · changes sync live</p>
+          <div class="field-row">
+            <label>🪙 Coin Value</label>
+            <input type="number" id="rw_coinValueCoins" value="${r.coinValueCoins}" step="50" style="width:70px;">
+            <span style="color:#6b7a9a; font-size:0.78rem;">coins = ₹</span>
+            <input type="number" id="rw_coinValueInr" value="${r.coinValueInr}" step="1" style="width:60px;">
           </div>
+          <hr>
+          <div class="divider-text">Referral</div>
+          <div class="field-row">
+            <label>🎁 Referral Bonus</label>
+            <input type="number" id="rw_referralBonus" value="${r.referralBonus}" step="10">
+          </div>
+          <button class="btn" id="saveRewardsBtn"><i class="fas fa-save"></i> Save Rewards</button>
         </div>
-      `;
-      document.getElementById('quickResetBtn')?.addEventListener('click', () => resetAllLimits());
-      document.getElementById('quickNoticeBtn')?.addEventListener('click', () => navigateTo('notice'));
-    }
+      </div>
+    `;
+    document.getElementById('saveRewardsBtn').onclick = saveRewards;
+  }
 
-    // ---- GAMES ----
-    function renderGames(container) {
-      const g = appState.games;
-      container.innerHTML = `
-        <div class="card">
-          <h2><i class="fas fa-gamepad"></i> Game Visibility & Daily Limits</h2>
-          <div class="field-group">
-            ${['ludo','color','watch','luck'].map(key => {
-              const label = {ludo:'🎲 Ludo Dice', color:'🎨 Color Game', watch:'📺 Watch & Earn', luck:'🍀 Try Luck'}[key];
-              return `<div class="field-row">
-                <label>${label}</label>
-                <div class="switch"><input type="checkbox" data-game="${key}" ${g[key].visible ? 'checked' : ''}><span class="badge-toggle">visible</span></div>
-                <input type="number" data-game="${key}" value="${g[key].dailyLimit || 0}" min="0" style="width:60px; text-align:center;" placeholder="limit">
-                <span style="font-size:0.7rem; color:#8b9ac0;">/day</span>
-              </div>`;
-            }).join('')}
-            <div class="field-row"><label>📱 Social Tasks</label><div class="switch"><input type="checkbox" data-game="social" ${g.social.visible ? 'checked' : ''}><span class="badge-toggle">visible</span></div></div>
-            <div class="field-row"><label>🌐 Visit & Earn</label><div class="switch"><input type="checkbox" data-game="visit" ${g.visit.visible ? 'checked' : ''}><span class="badge-toggle">visible</span></div></div>
-            <button class="btn" id="saveGamesBtn"><i class="fas fa-save"></i> Save Games</button>
-          </div>
-        </div>
-      `;
-      document.getElementById('saveGamesBtn')?.addEventListener('click', () => {
-        document.querySelectorAll('[data-game]').forEach(el => {
-          const key = el.dataset.game;
-          if (!appState.games[key]) appState.games[key] = {};
-          if (el.type === 'checkbox') {
-            appState.games[key].visible = el.checked;
-          } else if (el.type === 'number') {
-            appState.games[key].dailyLimit = parseInt(el.value) || 0;
-          }
-        });
-        pushToFirebase('games', appState.games);
-        showToast('✅ Games & limits saved');
-      });
-    }
+  function saveRewards() {
+    const keys = ['adWatch','colorGame','ludoGameCost','ludoMultiplier','luckReward','socialReward','visitReward','minWithdraw','coinValueCoins','coinValueInr','referralBonus'];
+    keys.forEach(k => {
+      const el = document.getElementById(`rw_${k}`);
+      if (el) appState.rewards[k] = parseFloat(el.value) || 0;
+    });
 
-    // ---- REWARDS ----
-    function renderRewards(container) {
-      const r = appState.rewards;
-      container.innerHTML = `
-        <div class="card">
-          <h2><i class="fas fa-coins"></i> Rewards & Coin Values</h2>
-          <div class="field-group">
-            ${[
-              {key:'adWatch', label:'💰 Ad Watch'},
-              {key:'colorGame', label:'🎨 Color Game'},
-              {key:'ludoMultiplier', label:'🎲 Ludo Win Multiplier'},
-              {key:'luckReward', label:'🍀 Try Luck'},
-              {key:'socialReward', label:'📱 Social Task'},
-              {key:'visitReward', label:'🌐 Visit Site'}
-            ].map(f => `<div class="field-row"><label>${f.label}</label><input type="number" id="rw_${f.key}" value="${r[f.key]}" step="5"></div>`).join('')}
-            <hr>
-            <div class="field-row"><label>💎 Min Withdraw</label><input type="number" id="rw_minWithdraw" value="${r.minWithdraw}" step="100"></div>
-            <div class="field-row"><label>🪙 Coin Value</label><input type="number" id="rw_coinValueCoins" value="${r.coinValueCoins}" step="50" style="width:90px;"> <span style="color:#6b7a9a;">coins = ₹</span> <input type="number" id="rw_coinValueInr" value="${r.coinValueInr}" step="1" style="width:70px;"></div>
-            <div class="field-row"><label>🎁 Referral Bonus</label><input type="number" id="rw_referralBonus" value="${r.referralBonus}" step="10"></div>
-            <button class="btn" id="saveRewardsBtn"><i class="fas fa-save"></i> Save Rewards</button>
-          </div>
-        </div>
-      `;
-      document.getElementById('saveRewardsBtn')?.addEventListener('click', () => {
-        const keys = ['adWatch','colorGame','ludoMultiplier','luckReward','socialReward','visitReward','minWithdraw','coinValueCoins','coinValueInr','referralBonus'];
-        keys.forEach(k => {
-          const el = document.getElementById(`rw_${k}`);
-          if (el) appState.rewards[k] = parseFloat(el.value) || 0;
-        });
-        pushToFirebase('rewards', appState.rewards);
+    // Map to miniapp keys (config/main doc)
+    const payload = {
+      adWatchReward: appState.rewards.adWatch,
+      colorGameReward: appState.rewards.colorGame,
+      ludoGameCost: appState.rewards.ludoGameCost,
+      ludoWinMultiplier: appState.rewards.ludoMultiplier,
+      tryYourLuckReward: appState.rewards.luckReward,
+      socialReward: appState.rewards.socialReward,
+      visitReward: appState.rewards.visitReward,
+      minWithdrawal: appState.rewards.minWithdraw,
+      coinValueCoins: appState.rewards.coinValueCoins,
+      coinValueInr: appState.rewards.coinValueInr,
+      referralBonus: appState.rewards.referralBonus,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    db.collection('config').doc('main').set(payload, { merge: true })
+      .then(() => {
         showToast('✅ Rewards saved');
-      });
-    }
+        updateTimestamp();
+      })
+      .catch(err => showToast('❌ ' + err.message, true));
+  }
 
-    // ---- CONTENT LISTS ----
-    function renderContent(container) {
-      const websites = appState.lists.websites || [];
-      const social = appState.lists.socialTasks || [];
-      container.innerHTML = `
-        <div class="card">
-          <h2><i class="fas fa-link"></i> Websites & Social Tasks</h2>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
-            <button class="btn btn-sm" id="addWebsiteBtn"><i class="fas fa-plus"></i> Add Website</button>
-            <button class="btn btn-sm btn-outline" id="addSocialBtn"><i class="fas fa-plus"></i> Add Social Task</button>
-            <button class="btn btn-sm btn-danger" id="resetVisitsBtn"><i class="fas fa-undo-alt"></i> Reset Visits</button>
-          </div>
-          <div id="websiteListContainer">
-            ${websites.length ? websites.map((w,i) => `
-              <div class="list-item"><span class="info"><strong>${w.name}</strong> • ${w.reward} coins • ${w.timer}s</span>
-              <button class="btn btn-sm btn-danger remove-item" data-type="website" data-idx="${i}"><i class="fas fa-trash"></i></button></div>
-            `).join('') : '<div class="empty-state">No websites</div>'}
-          </div>
-          <div id="socialListContainer" style="margin-top:16px;">
-            ${social.length ? social.map((s,i) => `
-              <div class="list-item"><span class="info"><strong>${s.name}</strong> • ${s.reward} coins</span>
-              <button class="btn btn-sm btn-danger remove-item" data-type="social" data-idx="${i}"><i class="fas fa-trash"></i></button></div>
-            `).join('') : '<div class="empty-state">No social tasks</div>'}
-          </div>
-          <button class="btn" id="saveListsBtn"><i class="fas fa-save"></i> Save Lists</button>
+  // ====================================================
+  // CONTENT — Websites & Social Tasks
+  // ====================================================
+  function renderContent(c) {
+    const websites = appState.lists.websites || [];
+    const social = appState.lists.socialTasks || [];
+
+    c.innerHTML = `
+      <div class="card" style="margin-bottom:20px;">
+        <h2><i class="fas fa-globe"></i> Websites to Visit</h2>
+        <div id="websiteList">
+          ${websites.length ? websites.map((w, i) => `
+            <div class="list-item">
+              <span class="info">
+                <strong>${w.name}</strong>
+                <span style="color:#8b9ac0;">${w.reward} coins · ${w.timer}s</span>
+              </span>
+              <button class="btn btn-sm btn-danger" data-remove-website="${i}">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          `).join('') : '<div class="empty-state">No websites yet</div>'}
         </div>
-      `;
-      // add events
-      document.getElementById('addWebsiteBtn')?.addEventListener('click', () => {
-        const name = prompt('Website name:');
-        if (!name) return;
-        const link = prompt('URL (https://...):');
-        if (!link) return;
-        const reward = parseInt(prompt('Reward coins:')) || 10;
-        const timer = parseInt(prompt('Timer (seconds):')) || 30;
-        appState.lists.websites.push({ name, link, reward, timer });
-        renderContent(container);
-        showToast('✅ Website added');
-      });
-      document.getElementById('addSocialBtn')?.addEventListener('click', () => {
-        const name = prompt('Task name:');
-        if (!name) return;
-        const link = prompt('Link:');
-        if (!link) return;
-        const reward = parseInt(prompt('Reward coins:')) || 20;
-        appState.lists.socialTasks.push({ name, link, reward, icon: 'link' });
-        renderContent(container);
-        showToast('✅ Social task added');
-      });
-      document.getElementById('resetVisitsBtn')?.addEventListener('click', () => {
-        if (confirm('Reset all website visits for today?')) {
-          db.collection('config').doc('main').update({ lastWebsiteResetDate: new Date().toISOString().slice(0,10) })
-            .then(() => showToast('✅ Visits reset'))
-            .catch(() => showToast('❌ Error resetting visits'));
+        <button class="btn" id="addWebsiteBtn" style="margin-top:8px;">
+          <i class="fas fa-plus"></i> Add Website
+        </button>
+      </div>
+
+      <div class="card">
+        <h2><i class="fas fa-share-nodes"></i> Social Tasks</h2>
+        <div id="socialList">
+          ${social.length ? social.map((s, i) => `
+            <div class="list-item">
+              <span class="info">
+                <strong>${s.name}</strong>
+                <span style="color:#8b9ac0;">${s.reward} coins</span>
+              </span>
+              <button class="btn btn-sm btn-danger" data-remove-social="${i}">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          `).join('') : '<div class="empty-state">No social tasks yet</div>'}
+        </div>
+        <button class="btn" id="addSocialBtn" style="margin-top:8px;">
+          <i class="fas fa-plus"></i> Add Social Task
+        </button>
+      </div>
+    `;
+
+    document.getElementById('addWebsiteBtn').onclick = () => {
+      const name = prompt('Website name:');
+      if (!name) return;
+      const link = prompt('URL (https://...):');
+      if (!link) return;
+      const reward = parseInt(prompt('Reward coins:', '10')) || 10;
+      const timer = parseInt(prompt('Timer in seconds:', '30')) || 30;
+      appState.lists.websites.push({ name, link, reward, timer });
+      saveLists().then(() => renderContent(c));
+    };
+
+    document.getElementById('addSocialBtn').onclick = () => {
+      const name = prompt('Task name:');
+      if (!name) return;
+      const link = prompt('Link (https://...):');
+      if (!link) return;
+      const reward = parseInt(prompt('Reward coins:', '20')) || 20;
+      const icon = prompt('Icon name (telegram, youtube, link, etc):', 'link') || 'link';
+      appState.lists.socialTasks.push({ name, link, reward, icon });
+      saveLists().then(() => renderContent(c));
+    };
+
+    c.querySelectorAll('[data-remove-website]').forEach(btn => {
+      btn.onclick = () => {
+        const i = parseInt(btn.dataset.removeWebsite);
+        appState.lists.websites.splice(i, 1);
+        saveLists().then(() => renderContent(c));
+      };
+    });
+
+    c.querySelectorAll('[data-remove-social]').forEach(btn => {
+      btn.onclick = () => {
+        const i = parseInt(btn.dataset.removeSocial);
+        appState.lists.socialTasks.splice(i, 1);
+        saveLists().then(() => renderContent(c));
+      };
+    });
+  }
+
+  function saveLists() {
+    const payload = {
+      websitesToVisit: appState.lists.websites,
+      socialTasks: appState.lists.socialTasks,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    return db.collection('config').doc('main').set(payload, { merge: true })
+      .then(() => { showToast('✅ Lists saved'); updateTimestamp(); })
+      .catch(err => showToast('❌ ' + err.message, true));
+  }
+
+  // ====================================================
+  // BANNERS
+  // ====================================================
+  function renderBanners(c) {
+    const banners = appState.banners || [];
+    c.innerHTML = `
+      <div class="card">
+        <h2><i class="fas fa-images"></i> Slider Banners</h2>
+        <div class="field-group" style="margin-bottom:16px;">
+          <div class="field-row">
+            <label>Image URL</label>
+            <input type="text" id="newBannerUrl" placeholder="https://...">
+          </div>
+          <div class="field-row">
+            <label>Link (optional)</label>
+            <input type="text" id="newBannerLink" placeholder="https://... or #">
+          </div>
+          <button class="btn" id="addBannerBtn"><i class="fas fa-plus"></i> Add Banner</button>
+        </div>
+
+        <div id="bannerList">
+          ${banners.length ? banners.map((b, i) => `
+            <div class="list-item">
+              <div style="display:flex; gap:10px; align-items:center; flex:1; min-width:0;">
+                <img src="${b.img}" style="width:60px; height:36px; object-fit:cover; border-radius:6px;" onerror="this.style.display='none'">
+                <div style="min-width:0;">
+                  <div style="font-size:0.78rem; color:#8b9ac0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:180px;">
+                    ${b.img}
+                  </div>
+                  <div style="font-size:0.68rem; color:#6b7a9a; margin-top:2px;">Link: ${b.link || '#'}</div>
+                </div>
+              </div>
+              <button class="btn btn-sm btn-danger" data-remove-banner="${i}">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          `).join('') : '<div class="empty-state">No banners yet</div>'}
+        </div>
+        <button class="btn" id="saveBannersBtn" style="margin-top:8px;">
+          <i class="fas fa-save"></i> Save Banners
+        </button>
+      </div>
+    `;
+
+    document.getElementById('addBannerBtn').onclick = () => {
+      const img = document.getElementById('newBannerUrl').value.trim();
+      if (!img) return showToast('❌ Enter image URL', true);
+      const link = document.getElementById('newBannerLink').value.trim() || '#';
+      appState.banners.push({ img, link });
+      renderBanners(c);
+    };
+
+    document.getElementById('saveBannersBtn').onclick = () => {
+      db.collection('config').doc('main').set({
+        sliderBanners: appState.banners,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true })
+        .then(() => showToast('✅ Banners saved'))
+        .catch(err => showToast('❌ ' + err.message, true));
+    };
+
+    c.querySelectorAll('[data-remove-banner]').forEach(btn => {
+      btn.onclick = () => {
+        appState.banners.splice(parseInt(btn.dataset.removeBanner), 1);
+        renderBanners(c);
+      };
+    });
+  }
+
+  // ====================================================
+  // NOTICE & REFERRAL
+  // ====================================================
+  function renderNotice(c) {
+    const n = appState.notice;
+    c.innerHTML = `
+      <div class="card">
+        <h2><i class="fas fa-bullhorn"></i> App Notice</h2>
+        <div class="field-group">
+          <div class="field-row" style="padding:12px 16px;">
+            <label>Enabled</label>
+            <div class="switch">
+              <input type="checkbox" id="noticeEnabled" ${n.enabled ? 'checked' : ''}>
+            </div>
+          </div>
+          <div class="field-row">
+            <label>Type</label>
+            <select id="noticeType">
+              <option value="info" ${n.type === 'info' ? 'selected' : ''}>Info</option>
+              <option value="success" ${n.type === 'success' ? 'selected' : ''}>Success</option>
+              <option value="warning" ${n.type === 'warning' ? 'selected' : ''}>Warning</option>
+              <option value="error" ${n.type === 'error' ? 'selected' : ''}>Error</option>
+              <option value="premium" ${n.type === 'premium' ? 'selected' : ''}>Premium</option>
+            </select>
+          </div>
+          <div class="field-row">
+            <label>Title</label>
+            <input type="text" id="noticeTitle" value="${n.title || ''}" placeholder="Important update">
+          </div>
+          <div class="field-row">
+            <label>Message</label>
+            <input type="text" id="noticeMessage" value="${n.message || ''}" placeholder="New features coming!">
+          </div>
+          <div class="field-row" style="padding:12px 16px;">
+            <label>User can dismiss</label>
+            <div class="switch">
+              <input type="checkbox" id="noticeCancelable" ${n.cancelable !== false ? 'checked' : ''}>
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn" id="publishNoticeBtn"><i class="fas fa-broadcast"></i> Publish</button>
+            <button class="btn btn-outline" id="dismissNoticeBtn"><i class="fas fa-times"></i> Disable Notice</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <h2><i class="fas fa-gift"></i> Referral</h2>
+        <div class="field-group">
+          <div class="field-row">
+            <label>Referral Bonus</label>
+            <input type="number" id="refBonus" value="${appState.rewards.referralBonus}" step="10">
+          </div>
+          <div class="field-row">
+            <label>Share Message</label>
+            <input type="text" id="refShareText" value="${appState.rewards.referralShareText || 'Join Games Hub and earn money! Use my code {CODE}. Link: {APP_LINK}'}">
+          </div>
+          <button class="btn" id="saveReferralBtn"><i class="fas fa-save"></i> Save Referral</button>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('publishNoticeBtn').onclick = () => {
+      const title = document.getElementById('noticeTitle').value.trim();
+      const message = document.getElementById('noticeMessage').value.trim();
+      if (!title || !message) return showToast('❌ Fill title and message', true);
+      const payload = {
+        enabled: document.getElementById('noticeEnabled').checked,
+        type: document.getElementById('noticeType').value,
+        title,
+        message,
+        cancelable: document.getElementById('noticeCancelable').checked,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      appState.notice = { ...appState.notice, ...payload };
+      db.collection('config').doc('appNotice').set(payload, { merge: true })
+        .then(() => showToast('📢 Notice published'))
+        .catch(err => showToast('❌ ' + err.message, true));
+    };
+
+    document.getElementById('dismissNoticeBtn').onclick = () => {
+      document.getElementById('noticeEnabled').checked = false;
+      appState.notice.enabled = false;
+      db.collection('config').doc('appNotice').set({ enabled: false }, { merge: true })
+        .then(() => showToast('✅ Notice disabled'))
+        .catch(err => showToast('❌ ' + err.message, true));
+    };
+
+    document.getElementById('saveReferralBtn').onclick = () => {
+      const bonus = parseInt(document.getElementById('refBonus').value) || 100;
+      const shareText = document.getElementById('refShareText').value.trim();
+      appState.rewards.referralBonus = bonus;
+      appState.rewards.referralShareText = shareText;
+      db.collection('config').doc('main').set({
+        referralBonus: bonus,
+        referralShareText: shareText,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true })
+        .then(() => showToast('✅ Referral saved'))
+        .catch(err => showToast('❌ ' + err.message, true));
+    };
+  }
+
+  // ====================================================
+  // COUNTRY
+  // ====================================================
+  function renderCountry(c) {
+    const co = appState.country;
+    c.innerHTML = `
+      <div class="card">
+        <h2><i class="fas fa-globe-americas"></i> Country Access</h2>
+        <div class="field-group">
+          <div class="field-row">
+            <label>Allowed (comma)</label>
+            <input type="text" id="allowedCountries" value="${(co.allowed || []).join(',')}" placeholder="in,us,gb">
+          </div>
+          <div class="field-row">
+            <label>IPinfo Token</label>
+            <input type="text" id="ipinfoToken" value="${co.ipinfoToken || ''}" placeholder="optional">
+          </div>
+          <div class="field-row">
+            <label>Block Message</label>
+            <input type="text" id="blockMessage" value="${co.blockMessage || ''}" placeholder="Not available in your country">
+          </div>
+          <button class="btn" id="saveCountryBtn"><i class="fas fa-save"></i> Save Country Settings</button>
+        </div>
+        <p style="color:#6b7a9a; font-size:0.72rem; margin-top:12px; line-height:1.5;">
+          Leave "Allowed" empty to allow all countries. Lowercase ISO-2 codes.
+        </p>
+      </div>
+    `;
+
+    document.getElementById('saveCountryBtn').onclick = () => {
+      const raw = document.getElementById('allowedCountries').value;
+      const allowed = raw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+      const ipinfoToken = document.getElementById('ipinfoToken').value.trim();
+      const blockMessage = document.getElementById('blockMessage').value.trim();
+      appState.country = { allowed, ipinfoToken, blockMessage };
+      db.collection('config').doc('main').set({
+        allowedCountries: allowed,
+        ipinfoApiToken: ipinfoToken,
+        blockedCountryMessage: blockMessage,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true })
+        .then(() => showToast('✅ Country settings saved'))
+        .catch(err => showToast('❌ ' + err.message, true));
+    };
+  }
+
+  // ====================================================
+  // ACTIONS
+  // ====================================================
+  function resetAllLimits() {
+    if (!confirm('Reset all daily limits for every user? This affects the miniapp immediately.')) return;
+    const today = new Date().toISOString().slice(0, 10);
+    db.collection('config').doc('resetFlags').set({
+      full_reset_date: today,
+      ludoDice_reset_date: today,
+      colorGame_reset_date: today,
+      watchVideo_reset_date: today,
+      tryYourLuck_reset_date: today
+    }, { merge: true })
+      .then(() => showToast('♻️ All limits reset'))
+      .catch(err => showToast('❌ ' + err.message, true));
+  }
+
+  function resetWebsiteVisits() {
+    if (!confirm('Reset website visit history for all users?')) return;
+    db.collection('config').doc('main').set({
+      lastWebsiteResetDate: new Date().toISOString().slice(0, 10)
+    }, { merge: true })
+      .then(() => showToast('✅ Website visits reset'))
+      .catch(err => showToast('❌ ' + err.message, true));
+  }
+
+  // ====================================================
+  // FIREBASE LOAD
+  // ====================================================
+  async function loadFromFirebase() {
+    try {
+      const [mainSnap, gamesSnap, adsSnap, noticeSnap] = await Promise.all([
+        db.collection('config').doc('main').get(),
+        db.collection('config').doc('games').get(),
+        db.collection('config').doc('ads').get(),
+        db.collection('config').doc('appNotice').get()
+      ]);
+
+      // ---- config/main ----
+      if (mainSnap.exists) {
+        const d = mainSnap.data();
+
+        // Rewards (map miniapp keys -> admin keys)
+        if (d.adWatchReward !== undefined) appState.rewards.adWatch = d.adWatchReward;
+        if (d.colorGameReward !== undefined) appState.rewards.colorGame = d.colorGameReward;
+        if (d.ludoGameCost !== undefined) appState.rewards.ludoGameCost = d.ludoGameCost;
+        if (d.ludoWinMultiplier !== undefined) appState.rewards.ludoMultiplier = d.ludoWinMultiplier;
+        if (d.tryYourLuckReward !== undefined) appState.rewards.luckReward = d.tryYourLuckReward;
+        if (d.socialReward !== undefined) appState.rewards.socialReward = d.socialReward;
+        if (d.visitReward !== undefined) appState.rewards.visitReward = d.visitReward;
+        if (d.minWithdrawal !== undefined) appState.rewards.minWithdraw = d.minWithdrawal;
+        if (d.coinValueCoins !== undefined) appState.rewards.coinValueCoins = d.coinValueCoins;
+        if (d.coinValueInr !== undefined) appState.rewards.coinValueInr = d.coinValueInr;
+        if (d.referralBonus !== undefined) appState.rewards.referralBonus = d.referralBonus;
+        if (d.referralShareText !== undefined) appState.rewards.referralShareText = d.referralShareText;
+        if (d.adsgramRewardId !== undefined) appState.rewards.adsgramRewardId = d.adsgramRewardId;
+        if (d.adsgramInterstitialId !== undefined) appState.rewards.adsgramInterstitialId = d.adsgramInterstitialId;
+        if (d.gigapubScriptId !== undefined) appState.rewards.gigapubScriptId = d.gigapubScriptId;
+
+        // Lists
+        if (Array.isArray(d.websitesToVisit)) appState.lists.websites = d.websitesToVisit;
+        if (Array.isArray(d.socialTasks)) appState.lists.socialTasks = d.socialTasks;
+
+        // Banners
+        if (Array.isArray(d.sliderBanners)) appState.banners = d.sliderBanners;
+
+        // Country
+        if (Array.isArray(d.allowedCountries)) appState.country.allowed = d.allowedCountries;
+        if (d.ipinfoApiToken !== undefined) appState.country.ipinfoToken = d.ipinfoApiToken;
+        if (d.blockedCountryMessage !== undefined) appState.country.blockMessage = d.blockedCountryMessage;
+
+        // Payment methods (optional)
+        if (Array.isArray(d.paymentMethods)) appState.rewards.paymentMethods = d.paymentMethods;
+      }
+
+      // ---- config/games ----
+      if (gamesSnap.exists) {
+        const g = gamesSnap.data();
+        // Map miniapp keys -> admin keys
+        if (g.ludoDice) {
+          appState.games.ludo = {
+            visible: g.ludoDice.visible !== false,
+            dailyPlayLimit: g.ludoDice.dailyPlayLimit || 0,
+            gameCost: g.ludoDice.gameCost || 10,
+            winMultiplier: g.ludoDice.winMultiplier || 10
+          };
         }
-      });
-      document.getElementById('saveListsBtn')?.addEventListener('click', () => {
-        pushToFirebase('lists', appState.lists);
-        showToast('✅ Lists saved');
-      });
-      // remove events (delegation)
-      container.querySelectorAll('.remove-item').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const type = this.dataset.type;
-          const idx = parseInt(this.dataset.idx);
-          if (type === 'website') appState.lists.websites.splice(idx, 1);
-          else if (type === 'social') appState.lists.socialTasks.splice(idx, 1);
-          renderContent(container);
-          showToast('🗑️ Removed');
-        });
-      });
-    }
+        if (g.colorGame) {
+          appState.games.color = {
+            visible: g.colorGame.visible !== false,
+            dailyPlayLimit: g.colorGame.dailyPlayLimit || 0,
+            rewardPerPlay: g.colorGame.rewardPerPlay || 100
+          };
+        }
+        if (g.watchVideo) {
+          appState.games.watch = {
+            visible: g.watchVideo.visible !== false,
+            dailyPlayLimit: g.watchVideo.dailyPlayLimit || 0,
+            rewardPerPlay: g.watchVideo.rewardPerPlay || 50
+          };
+        }
+        if (g.tryYourLuck) {
+          appState.games.luck = {
+            visible: g.tryYourLuck.visible !== false,
+            dailyPlayLimit: g.tryYourLuck.dailyPlayLimit || 0,
+            rewardPerPlay: g.tryYourLuck.rewardPerPlay || 500
+          };
+        }
+        if (g.socialTasks) appState.games.social = { visible: g.socialTasks.visible !== false };
+        if (g.visitWebsites) appState.games.visit = { visible: g.visitWebsites.visible !== false };
+      }
 
-    // ---- BANNERS ----
-    function renderBanners(container) {
-      const banners = appState.banners || [];
-      container.innerHTML = `
-        <div class="card">
-          <h2><i class="fas fa-images"></i> Slider Banners</h2>
-          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
-            <input type="text" id="newBannerUrl" placeholder="Image URL" style="flex:2; background:#0e1325; border:1px solid #262f47; border-radius:40px; padding:10px 18px; color:white;">
-            <input type="text" id="newBannerLink" placeholder="Link (optional)" style="flex:1; background:#0e1325; border:1px solid #262f47; border-radius:40px; padding:10px 18px; color:white;">
-            <button class="btn btn-sm" id="addBannerBtn"><i class="fas fa-plus"></i> Add</button>
-          </div>
-          <div id="bannerListContainer">
-            ${banners.length ? banners.map((b,i) => `
-              <div class="list-item"><span class="info"><strong>Banner ${i+1}</strong> <span style="opacity:0.5;">${b.img.substring(0,30)}...</span></span>
-              <button class="btn btn-sm btn-danger remove-banner" data-idx="${i}"><i class="fas fa-trash"></i></button></div>
-            `).join('') : '<div class="empty-state">No banners</div>'}
-          </div>
-          <button class="btn" id="saveBannersBtn"><i class="fas fa-save"></i> Save Banners</button>
-        </div>
-      `;
-      document.getElementById('addBannerBtn')?.addEventListener('click', () => {
-        const img = document.getElementById('newBannerUrl').value.trim();
-        if (!img) { showToast('❌ Enter image URL'); return; }
-        const link = document.getElementById('newBannerLink').value.trim() || '#';
-        appState.banners.push({ img, link });
-        renderBanners(container);
-        showToast('✅ Banner added');
-      });
-      document.getElementById('saveBannersBtn')?.addEventListener('click', () => {
-        pushToFirebase('banners', appState.banners);
-        showToast('✅ Banners saved');
-      });
-      container.querySelectorAll('.remove-banner').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const idx = parseInt(this.dataset.idx);
-          appState.banners.splice(idx, 1);
-          renderBanners(container);
-          showToast('🗑️ Removed');
-        });
-      });
-    }
-
-    // ---- NOTICE & REFERRAL ----
-    function renderNotice(container) {
-      const n = appState.notice;
-      container.innerHTML = `
-        <div class="card">
-          <h2><i class="fas fa-bullhorn"></i> Notice & Referral</h2>
-          <div class="field-group">
-            <div class="field-row"><label>🎁 Referral Bonus</label><input type="number" id="refBonus" value="${appState.rewards.referralBonus}" step="10"></div>
-            <div class="field-row"><label>📢 App Notice</label>
-              <div class="switch"><input type="checkbox" id="noticeEnabled" ${n.enabled ? 'checked' : ''}><span class="badge-toggle">enabled</span></div>
-            </div>
-            <div class="field-row" style="flex-wrap:wrap; border-radius:20px; padding:12px;">
-              <label style="min-width:100%;">Title</label>
-              <input type="text" id="noticeTitle" value="${n.title || ''}" placeholder="Important update" style="width:100%;">
-              <label style="min-width:100%; margin-top:6px;">Message</label>
-              <input type="text" id="noticeMessage" value="${n.message || ''}" placeholder="New features coming!" style="width:100%;">
-            </div>
-            <button class="btn" id="publishNoticeBtn"><i class="fas fa-broadcast"></i> Publish Notice</button>
-            <button class="btn btn-outline" id="dismissNoticeBtn">Dismiss Notice</button>
-            <hr>
-            <button class="btn btn-danger" id="resetAllBtn"><i class="fas fa-redo-alt"></i> Reset All Limits (today)</button>
-          </div>
-        </div>
-      `;
-      document.getElementById('publishNoticeBtn')?.addEventListener('click', () => {
-        const title = document.getElementById('noticeTitle').value.trim();
-        const message = document.getElementById('noticeMessage').value.trim();
-        if (!title || !message) { showToast('❌ Fill title & message'); return; }
-        appState.notice.enabled = document.getElementById('noticeEnabled').checked;
-        appState.notice.title = title;
-        appState.notice.message = message;
-        // also update referral bonus
-        appState.rewards.referralBonus = parseInt(document.getElementById('refBonus').value) || 100;
-        pushToFirebase('notice', appState.notice);
-        pushToFirebase('rewards', { referralBonus: appState.rewards.referralBonus });
-        showToast('📢 Notice published');
-      });
-      document.getElementById('dismissNoticeBtn')?.addEventListener('click', () => {
-        appState.notice.enabled = false;
-        document.getElementById('noticeEnabled').checked = false;
-        pushToFirebase('notice', appState.notice);
-        showToast('Notice dismissed');
-      });
-      document.getElementById('resetAllBtn')?.addEventListener('click', resetAllLimits);
-    }
-
-    // ---- COUNTRY ----
-    function renderCountry(container) {
-      const c = appState.country;
-      container.innerHTML = `
-        <div class="card">
-          <h2><i class="fas fa-globe-americas"></i> Country Access</h2>
-          <div class="field-group">
-            <div class="field-row"><label>🌍 Allowed</label><input type="text" id="allowedCountries" value="${(c.allowed || []).join(',')}" placeholder="in,us,gb"></div>
-            <div class="field-row"><label>🔑 IPinfo Token</label><input type="text" id="ipinfoToken" value="${c.ipinfoToken || ''}" placeholder="optional"></div>
-            <div class="field-row"><label>🚫 Block Message</label><input type="text" id="blockMessage" value="${c.blockMessage || ''}" placeholder="Not available"></div>
-            <button class="btn" id="saveCountryBtn"><i class="fas fa-save"></i> Save Country Settings</button>
-          </div>
-        </div>
-      `;
-      document.getElementById('saveCountryBtn')?.addEventListener('click', () => {
-        const raw = document.getElementById('allowedCountries').value;
-        appState.country.allowed = raw.split(',').map(s => s.trim().toLowerCase()).filter(s => s);
-        appState.country.ipinfoToken = document.getElementById('ipinfoToken').value.trim();
-        appState.country.blockMessage = document.getElementById('blockMessage').value.trim();
-        pushToFirebase('country', appState.country);
-        showToast('✅ Country settings saved');
-      });
-    }
-
-    // ---------- FIREBASE PUSH (sync to miniapp) ----------
-    function pushToFirebase(section, data) {
-      // we store in config/main to match miniapp
-      const ref = db.collection('config').doc('main');
-      const payload = {};
-      
-      if (section === 'games') {
-        payload.games = data;
-      } else if (section === 'rewards') {
-        // Merge rewards into main config - these keys are used by miniapp
-        const rewardPayload = {
-          adWatchReward: data.adWatch,
-          colorGameReward: data.colorGame,
-          ludoGameCost: data.ludoMultiplier,
-          ludoWinMultiplier: data.ludoMultiplier,
-          tryYourLuckReward: data.luckReward,
-          socialReward: data.socialReward,
-          visitReward: data.visitReward,
-          minWithdrawal: data.minWithdraw,
-          coinValueCoins: data.coinValueCoins,
-          coinValueInr: data.coinValueInr,
-          referralBonus: data.referralBonus
+      // ---- config/ads ----
+      if (adsSnap.exists) {
+        const a = adsSnap.data();
+        appState.ads = {
+          gigapub:              { enabled: a.gigapub?.enabled !== false,             order: a.gigapub?.order || 1 },
+          adsgramReward:        { enabled: a.adsgramReward?.enabled !== false,       order: a.adsgramReward?.order || 2 },
+          adsgramInterstitial:  { enabled: a.adsgramInterstitial?.enabled !== false, order: a.adsgramInterstitial?.order || 3 }
         };
-        return ref.set(rewardPayload, { merge: true }).then(() => {
-          showToast('✅ Rewards synced');
-          updateTimestamp();
-        }).catch(err => showToast('❌ Error: ' + err.message));
-      } else if (section === 'lists') {
-        payload.websitesToVisit = data.websites || [];
-        payload.socialTasks = data.socialTasks || [];
-      } else if (section === 'banners') {
-        payload.sliderBanners = data;
-      } else if (section === 'notice') {
-        // store notice in separate doc
-        return db.collection('config').doc('appNotice').set({
-          enabled: data.enabled,
-          title: data.title,
-          message: data.message,
-          type: 'info',
-          cancelable: true
-        }, { merge: true }).then(() => {
-          showToast('📢 Notice synced');
-          updateTimestamp();
-        }).catch(err => showToast('❌ Error: ' + err.message));
-      } else if (section === 'country') {
-        payload.allowedCountries = data.allowed || [];
-        payload.ipinfoApiToken = data.ipinfoToken || '';
-        payload.blockedCountryMessage = data.blockMessage || '';
       }
-      
-      return ref.set(payload, { merge: true }).then(() => {
-        showToast(`✅ ${section} synced`);
-        updateTimestamp();
-      }).catch(err => showToast('❌ Error: ' + err.message));
-    }
 
-    // ---------- RESET ALL LIMITS ----------
-    function resetAllLimits() {
-      if (!confirm('Reset all daily limits for all users?')) return;
-      const today = new Date().toISOString().slice(0,10);
-      db.collection('config').doc('resetFlags').set({
-        full_reset_date: today,
-        ludoDice_reset_date: today,
-        colorGame_reset_date: today,
-        watchVideo_reset_date: today,
-        tryYourLuck_reset_date: today
-      }, { merge: true }).then(() => {
-        showToast('♻️ All limits reset');
-      }).catch(() => showToast('❌ Error resetting'));
-    }
-
-    // ---------- UTILITIES ----------
-    function showToast(msg) {
-      const el = document.getElementById('toast');
-      document.getElementById('toastMsg').textContent = msg;
-      el.classList.add('show');
-      clearTimeout(el._hide);
-      el._hide = setTimeout(() => el.classList.remove('show'), 2500);
-    }
-
-    function updateTimestamp() {
-      const now = new Date().toLocaleTimeString();
-      document.getElementById('lastUpdate').textContent = now;
-    }
-
-    // ---------- INIT ----------
-    // load from firebase on startup
-    async function loadFromFirebase() {
-      try {
-        const mainSnap = await db.collection('config').doc('main').get();
-        if (mainSnap.exists) {
-          const data = mainSnap.data();
-          
-          // Games config
-          if (data.games) {
-            // Map miniapp game IDs to admin state keys
-            const gameMap = {
-              ludoDice: 'ludo',
-              colorGame: 'color',
-              watchVideo: 'watch',
-              tryYourLuck: 'luck',
-              socialTasks: 'social',
-              visitWebsites: 'visit'
-            };
-            Object.keys(gameMap).forEach(miniId => {
-              if (data.games[miniId]) {
-                const adminKey = gameMap[miniId];
-                appState.games[adminKey] = {
-                  visible: data.games[miniId].visible !== false,
-                  dailyLimit: data.games[miniId].dailyPlayLimit || 0
-                };
-              }
-            });
-          }
-          
-          // Lists
-          if (data.websitesToVisit && Array.isArray(data.websitesToVisit)) {
-            appState.lists.websites = data.websitesToVisit;
-          }
-          if (data.socialTasks && Array.isArray(data.socialTasks)) {
-            appState.lists.socialTasks = data.socialTasks;
-          }
-          
-          // Banners
-          if (data.sliderBanners && Array.isArray(data.sliderBanners)) {
-            appState.banners = data.sliderBanners;
-          }
-          
-          // Country
-          if (data.allowedCountries) appState.country.allowed = data.allowedCountries;
-          if (data.ipinfoApiToken) appState.country.ipinfoToken = data.ipinfoApiToken;
-          if (data.blockedCountryMessage) appState.country.blockMessage = data.blockedCountryMessage;
-          
-          // Rewards - map from miniapp keys to admin keys
-          if (data.adWatchReward !== undefined) appState.rewards.adWatch = data.adWatchReward;
-          if (data.colorGameReward !== undefined) appState.rewards.colorGame = data.colorGameReward;
-          if (data.ludoWinMultiplier !== undefined) appState.rewards.ludoMultiplier = data.ludoWinMultiplier;
-          if (data.tryYourLuckReward !== undefined) appState.rewards.luckReward = data.tryYourLuckReward;
-          if (data.socialReward !== undefined) appState.rewards.socialReward = data.socialReward;
-          if (data.visitReward !== undefined) appState.rewards.visitReward = data.visitReward;
-          if (data.minWithdrawal !== undefined) appState.rewards.minWithdraw = data.minWithdrawal;
-          if (data.coinValueCoins !== undefined) appState.rewards.coinValueCoins = data.coinValueCoins;
-          if (data.coinValueInr !== undefined) appState.rewards.coinValueInr = data.coinValueInr;
-          if (data.referralBonus !== undefined) appState.rewards.referralBonus = data.referralBonus;
-        }
-        
-        // Notice
-        const noticeSnap = await db.collection('config').doc('appNotice').get();
-        if (noticeSnap.exists) {
-          const n = noticeSnap.data();
-          appState.notice.enabled = n.enabled || false;
-          appState.notice.title = n.title || '';
-          appState.notice.message = n.message || '';
-        }
-        
-        updateTimestamp();
-        renderPage(currentPage);
-        showToast('✅ Synced with Firebase');
-      } catch (e) {
-        console.warn('Firebase load error, using defaults', e);
-        renderPage(currentPage);
-        showToast('⚠️ Using local defaults');
+      // ---- config/appNotice ----
+      if (noticeSnap.exists) {
+        const n = noticeSnap.data();
+        appState.notice = {
+          enabled: n.enabled || false,
+          title: n.title || '',
+          message: n.message || '',
+          type: n.type || 'info',
+          cancelable: n.cancelable !== false
+        };
       }
+
+      updateTimestamp();
+      renderPage(currentPage);
+      showToast('✅ Synced with Firebase');
+    } catch (e) {
+      console.error('Load error:', e);
+      renderPage(currentPage);
+      showToast('⚠️ Using local defaults', true);
     }
+  }
 
-    // navigation events
-    document.querySelectorAll('.nav-item').forEach(el => {
-      el.addEventListener('click', function(e) {
-        e.preventDefault();
-        const page = this.dataset.page;
-        if (page) navigateTo(page);
-      });
+  // ====================================================
+  // TOAST / TIMESTAMP
+  // ====================================================
+  function showToast(msg, isError = false) {
+    const el = document.getElementById('toast');
+    const icon = el.querySelector('i');
+    document.getElementById('toastMsg').textContent = msg;
+    el.classList.toggle('error', isError);
+    icon.className = isError ? 'fas fa-times-circle' : 'fas fa-check-circle';
+    el.classList.add('show');
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove('show'), 2800);
+  }
+
+  function updateTimestamp() {
+    document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+  }
+
+  // ====================================================
+  // INIT
+  // ====================================================
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigateTo(el.dataset.page);
     });
+  });
 
-    // refresh & save all
-    document.getElementById('refreshBtn')?.addEventListener('click', () => {
-      loadFromFirebase();
-    });
-    document.getElementById('saveAllBtn')?.addEventListener('click', () => {
-      // push all sections
-      pushToFirebase('games', appState.games);
-      pushToFirebase('lists', appState.lists);
-      pushToFirebase('banners', appState.banners);
-      pushToFirebase('country', appState.country);
-      pushToFirebase('rewards', appState.rewards);
-      if (appState.notice.enabled) pushToFirebase('notice', appState.notice);
-      showToast('💾 All saved');
-    });
+  document.getElementById('refreshBtn').onclick = () => loadFromFirebase();
 
-    // start
-    loadFromFirebase();
+  document.getElementById('saveAllBtn').onclick = async () => {
+    try {
+      await pushGamesToFirebase(appState.games);
+      await db.collection('config').doc('ads').set(appState.ads, { merge: true });
+      await db.collection('config').doc('main').set({
+        adWatchReward: appState.rewards.adWatch,
+        colorGameReward: appState.rewards.colorGame,
+        ludoGameCost: appState.rewards.ludoGameCost,
+        ludoWinMultiplier: appState.rewards.ludoMultiplier,
+        tryYourLuckReward: appState.rewards.luckReward,
+        socialReward: appState.rewards.socialReward,
+        visitReward: appState.rewards.visitReward,
+        minWithdrawal: appState.rewards.minWithdraw,
+        coinValueCoins: appState.rewards.coinValueCoins,
+        coinValueInr: appState.rewards.coinValueInr,
+        referralBonus: appState.rewards.referralBonus,
+        websitesToVisit: appState.lists.websites,
+        socialTasks: appState.lists.socialTasks,
+        sliderBanners: appState.banners,
+        allowedCountries: appState.country.allowed,
+        ipinfoApiToken: appState.country.ipinfoToken,
+        blockedCountryMessage: appState.country.blockMessage,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+      await db.collection('config').doc('appNotice').set(appState.notice, { merge: true });
+      showToast('💾 All sections saved');
+      updateTimestamp();
+    } catch (e) {
+      showToast('❌ ' + e.message, true);
+    }
+  };
 
-    // set initial active page
-    navigateTo('dashboard');
+  // Boot
+  loadFromFirebase();
+  navigateTo('dashboard');
 
-  })();
+})();
 </script>
 </body>
 </html>
