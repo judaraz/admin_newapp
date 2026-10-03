@@ -31,7 +31,7 @@
       --warn: #f59e0b;
     }
 
-    /* ===== SIDEBAR ===== */
+    /* SIDEBAR */
     .sidebar {
       width: 250px;
       background: rgba(12, 16, 30, 0.95);
@@ -100,7 +100,7 @@
       margin-right: 6px; box-shadow: 0 0 12px rgba(34,197,94,0.5);
     }
 
-    /* ===== MAIN ===== */
+    /* MAIN */
     .main-content {
       flex: 1; padding: 24px 28px 40px;
       max-width: 1400px; margin: 0 auto; min-width: 0;
@@ -276,7 +276,7 @@
       font-size: 0.75rem; font-weight: 800; flex-shrink: 0;
     }
 
-    /* ===== USERS TABLE ===== */
+    /* USERS TABLE */
     .users-toolbar {
       display: flex; gap: 10px; flex-wrap: wrap;
       margin-bottom: 14px; align-items: center;
@@ -317,7 +317,6 @@
     .user-name { font-weight: 600; color: white; font-size: 0.82rem; }
     .user-sub { color: var(--text-mute); font-size: 0.68rem; margin-top: 1px; }
 
-    /* ===== USER DETAIL MODAL ===== */
     .user-detail-row {
       display: flex; justify-content: space-between;
       padding: 8px 0; border-bottom: 1px solid #1f2842;
@@ -326,7 +325,7 @@
     .user-detail-row span:first-child { color: var(--text-mute); }
     .user-detail-row span:last-child { color: white; font-weight: 500; text-align: right; }
 
-    /* ===== ANALYTICS ===== */
+    /* STATS */
     .stat-big {
       background: #0e1325; border-radius: 14px;
       padding: 16px 18px; border: 1px solid #262f47;
@@ -342,10 +341,7 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    .stat-big .delta {
-      font-size: 0.72rem; color: var(--text-mute);
-      margin-top: 4px;
-    }
+    .stat-big .delta { font-size: 0.72rem; color: var(--text-mute); margin-top: 4px; }
 
     .analytics-grid {
       display: grid;
@@ -354,7 +350,7 @@
       margin-bottom: 18px;
     }
 
-    /* ===== WITHDRAWALS ===== */
+    /* WITHDRAWALS */
     .withdraw-row {
       background: #0e1325; border-radius: 11px;
       padding: 12px 14px; margin-bottom: 8px;
@@ -366,7 +362,7 @@
     .withdraw-row.approved { border-left-color: var(--success); }
     .withdraw-row.rejected { border-left-color: var(--danger); }
 
-    /* ===== MODAL ===== */
+    /* MODAL */
     .modal-back {
       position: fixed; inset: 0;
       background: rgba(10,14,26,0.9);
@@ -385,6 +381,7 @@
       max-width: 520px; width: 100%;
       box-shadow: 0 25px 60px rgba(0,0,0,0.7);
       max-height: 90vh; overflow-y: auto;
+      position: relative;
     }
     .modal-box h3 {
       font-size: 1.15rem; font-weight: 800;
@@ -400,7 +397,27 @@
       display: flex; align-items: center; justify-content: center;
     }
 
-    /* Responsive */
+    /* Payment method row */
+    .pm-row {
+      display: flex; flex-wrap: wrap; gap: 8px 12px;
+      background: #0e1325; padding: 12px 14px;
+      border-radius: 11px; border: 1px solid #262f47;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+    .pm-row input {
+      flex: 1; min-width: 100px;
+      background: transparent; border: none;
+      color: white; font-size: 0.85rem;
+      padding: 6px 0; outline: none; font-family: inherit;
+    }
+    .pm-row input::placeholder { color: #5b6a8a; }
+    .pm-badge {
+      background: rgba(0,229,160,0.15); color: var(--brand);
+      padding: 3px 9px; border-radius: 8px;
+      font-size: 0.68rem; font-weight: 700;
+    }
+
     @media (max-width: 900px) {
       .sidebar { width: 68px; padding: 14px 6px; }
       .sidebar-brand span, .nav-item span,
@@ -420,7 +437,7 @@
 </head>
 <body>
 
-<!-- ============ SIDEBAR ============ -->
+<!-- SIDEBAR -->
 <nav class="sidebar">
   <div class="sidebar-brand">
     <i class="fas fa-crown"></i>
@@ -444,6 +461,7 @@
     <a class="nav-item" data-page="ads"><i class="fas fa-ad"></i><span>Ad Networks</span></a>
     <a class="nav-item" data-page="games"><i class="fas fa-gamepad"></i><span>Games</span></a>
     <a class="nav-item" data-page="rewards"><i class="fas fa-coins"></i><span>Rewards</span></a>
+    <a class="nav-item" data-page="payments"><i class="fas fa-credit-card"></i><span>Payment Methods</span></a>
   </div>
 
   <div class="nav-section">
@@ -465,7 +483,7 @@
   </div>
 </nav>
 
-<!-- ============ MAIN ============ -->
+<!-- MAIN -->
 <div class="main-content">
   <div class="page-header">
     <div>
@@ -481,12 +499,12 @@
   <div id="pageContainer"></div>
 </div>
 
-<!-- ============ MODAL ============ -->
+<!-- MODAL -->
 <div class="modal-back" id="modalBack">
-  <div class="modal-box" style="position:relative;" id="modalBox"></div>
+  <div class="modal-box" id="modalBox"></div>
 </div>
 
-<!-- ============ TOAST ============ -->
+<!-- TOAST -->
 <div id="toast" class="toast">
   <i class="fas fa-check-circle" style="color:var(--brand);"></i>
   <span id="toastMsg">Saved</span>
@@ -496,9 +514,7 @@
 (function() {
   "use strict";
 
-  // ====================================================
-  // FIREBASE
-  // ====================================================
+  // ============ FIREBASE ============
   const firebaseConfig = {
     apiKey: "AIzaSyBEvTvWy-hH1HHgjoOhUKkj-Dglm11Oc8U",
     authDomain: "cash-rewards-01-624ae.firebaseapp.com",
@@ -510,19 +526,21 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
-  // ====================================================
-  // STATE
-  // ====================================================
+  // ============ STATE ============
   let appState = {
     games: {
-      ludo:   { visible: true, dailyPlayLimit: 5, gameCost: 10, winMultiplier: 10 },
-      color:  { visible: true, dailyPlayLimit: 8, rewardPerPlay: 100 },
-      watch:  { visible: true, dailyPlayLimit: 10, rewardPerPlay: 50 },
-      luck:   { visible: true, dailyPlayLimit: 3, rewardPerPlay: 500 },
-      social: { visible: true },
-      visit:  { visible: true },
-      wallet: { visible: true },
-      withdraw: { visible: true }
+      ludoDice: { visible: true, dailyPlayLimit: 5, gameCost: 10, winMultiplier: 10 },
+      color:    { visible: true, dailyPlayLimit: 8, rewardPerPlay: 100 },
+      watch:    { visible: true, dailyPlayLimit: 10, rewardPerPlay: 50 },
+      luck:     { visible: true, dailyPlayLimit: 3, rewardPerPlay: 500 },
+      social:   { visible: true },
+      visit:    { visible: true },
+      wallet:   { visible: true },
+      withdraw: { visible: true },
+      // New 3 games
+      g29:      { visible: true, entryFee: 100, winnerReward: 180 },
+      ludo:     { visible: true, entryFee: 100, winnerReward: 180 },
+      carrom:   { visible: true, entryFee: 100, winnerReward: 180 }
     },
     ads: {
       gigapub:             { enabled: true, order: 1 },
@@ -538,44 +556,44 @@
       referralShareText: 'Join Games Hub and earn money! Use my code {CODE}. Link: {APP_LINK}',
       adsgramRewardId: '21768',
       adsgramInterstitialId: 'int-21769',
-      gigapubScriptId: '1794'
+      gigapubScriptId: '1794',
+      adRewardPerView: 10   // for "watch ad for points" when broke
     },
     lists: {
       websites: [],
       socialTasks: [],
-      paymentMethods: ['UPI', 'Paytm', 'PayPal']
+      paymentMethods: [
+        { name: 'UPI', id: 'upi', placeholder: 'Enter UPI ID (e.g., user@bank)' },
+        { name: 'Paytm', id: 'paytm', placeholder: 'Enter Paytm Number' },
+        { name: 'PayPal', id: 'paypal', placeholder: 'Enter PayPal Email' }
+      ]
     },
     banners: [],
     country: { allowed: [], ipinfoToken: '', blockMessage: 'Not available in your country' },
     notice: { enabled: false, title: '', message: '', type: 'info', cancelable: true },
-    bot: {
-      token: '',
-      username: '',
-      miniappLink: ''
-    }
+    bot: { token: '', username: '', miniappLink: '' }
   };
 
   let usersList = [];
   let withdrawalsList = [];
   let pointHistoryList = [];
 
-  // ====================================================
-  // NAV
-  // ====================================================
-  const pages = ['dashboard','analytics','users','withdrawals','ads','games','rewards','content','banners','notice','messages','country'];
+  // ============ NAV ============
+  const pages = ['dashboard','analytics','users','withdrawals','ads','games','rewards','payments','content','banners','notice','messages','country'];
   const titles = {
-    dashboard: ['Dashboard', 'Real-time overview'],
-    analytics: ['Analytics', 'Track users, points & ads'],
-    users: ['Users', 'Manage all Telegram users'],
+    dashboard:   ['Dashboard', 'Real-time overview'],
+    analytics:   ['Analytics', 'Track users, points & ads'],
+    users:       ['Users', 'Manage all Telegram users'],
     withdrawals: ['Withdrawals', 'Review pending requests'],
-    ads: ['Ad Networks', 'Enable and order ad providers'],
-    games: ['Games & Limits', 'Visibility, cost, daily limits'],
-    rewards: ['Rewards & Coins', 'Points earned per action'],
-    content: ['Content Lists', 'Websites, tasks, payment methods'],
-    banners: ['Banners', 'Home page carousel'],
-    notice: ['Notice & Bot', 'Announcements and Telegram bot'],
-    messages: ['Send Message', 'Message users via Telegram bot'],
-    country: ['Country Access', 'Geo-blocking']
+    ads:         ['Ad Networks', 'Enable and order ad providers'],
+    games:       ['Games & Limits', 'Visibility, cost, daily limits'],
+    rewards:     ['Rewards & Coin Values', 'Points earned & conversion rates'],
+    payments:    ['Payment Methods', 'Manage withdrawal methods'],
+    content:     ['Content Lists', 'Websites and social tasks'],
+    banners:     ['Banners', 'Home page carousel'],
+    notice:      ['Notice & Bot', 'Announcements and Telegram bot'],
+    messages:    ['Send Message', 'Message users via Telegram bot'],
+    country:     ['Country Access', 'Geo-blocking']
   };
   let currentPage = 'dashboard';
 
@@ -593,24 +611,23 @@
   function renderPage(page) {
     const c = document.getElementById('pageContainer');
     switch (page) {
-      case 'dashboard': renderDashboard(c); break;
-      case 'analytics': renderAnalytics(c); break;
-      case 'users': renderUsers(c); break;
+      case 'dashboard':   renderDashboard(c); break;
+      case 'analytics':   renderAnalytics(c); break;
+      case 'users':       renderUsers(c); break;
       case 'withdrawals': renderWithdrawals(c); break;
-      case 'ads': renderAds(c); break;
-      case 'games': renderGames(c); break;
-      case 'rewards': renderRewards(c); break;
-      case 'content': renderContent(c); break;
-      case 'banners': renderBanners(c); break;
-      case 'notice': renderNotice(c); break;
-      case 'messages': renderMessages(c); break;
-      case 'country': renderCountry(c); break;
+      case 'ads':         renderAds(c); break;
+      case 'games':       renderGames(c); break;
+      case 'rewards':     renderRewards(c); break;
+      case 'payments':    renderPayments(c); break;
+      case 'content':     renderContent(c); break;
+      case 'banners':     renderBanners(c); break;
+      case 'notice':      renderNotice(c); break;
+      case 'messages':    renderMessages(c); break;
+      case 'country':     renderCountry(c); break;
     }
   }
 
-  // ====================================================
-  // DASHBOARD
-  // ====================================================
+  // ============ DASHBOARD ============
   function renderDashboard(c) {
     const enabledAds = Object.values(appState.ads).filter(v => v.enabled).length;
     const totalAds = Object.keys(appState.ads).length;
@@ -621,22 +638,10 @@
         <div class="card" style="grid-column: span 2;">
           <h2><i class="fas fa-chart-line"></i> Live Overview</h2>
           <div class="analytics-grid">
-            <div class="stat-big">
-              <div class="label">Total Users</div>
-              <div class="value">${usersList.length}</div>
-            </div>
-            <div class="stat-big">
-              <div class="label">Active Ads</div>
-              <div class="value">${enabledAds}/${totalAds}</div>
-            </div>
-            <div class="stat-big">
-              <div class="label">Pending Withdrawals</div>
-              <div class="value">${pendingWd}</div>
-            </div>
-            <div class="stat-big">
-              <div class="label">Websites</div>
-              <div class="value">${appState.lists.websites.length}</div>
-            </div>
+            <div class="stat-big"><div class="label">Total Users</div><div class="value">${usersList.length}</div></div>
+            <div class="stat-big"><div class="label">Active Ads</div><div class="value">${enabledAds}/${totalAds}</div></div>
+            <div class="stat-big"><div class="label">Pending Withdrawals</div><div class="value">${pendingWd}</div></div>
+            <div class="stat-big"><div class="label">Payment Methods</div><div class="value">${appState.lists.paymentMethods.length}</div></div>
           </div>
         </div>
 
@@ -645,7 +650,7 @@
           <div class="field-group">
             <button class="btn" id="qaResetLimits"><i class="fas fa-redo-alt"></i> Reset Daily Limits</button>
             <button class="btn btn-outline" id="qaAds"><i class="fas fa-ad"></i> Manage Ad Networks</button>
-            <button class="btn btn-outline" id="qaWd"><i class="fas fa-money-bill-wave"></i> Review Withdrawals</button>
+            <button class="btn btn-outline" id="qaPayments"><i class="fas fa-credit-card"></i> Payment Methods</button>
             <button class="btn btn-outline" id="qaMsg"><i class="fas fa-envelope"></i> Send Message</button>
           </div>
         </div>
@@ -655,20 +660,18 @@
           <div class="field-group">
             <div class="field-row"><label>Min Withdraw</label><span style="color:var(--brand); font-weight:700;">${appState.rewards.minWithdraw} coins</span></div>
             <div class="field-row"><label>Coin Rate</label><span style="color:var(--brand); font-weight:700;">${appState.rewards.coinValueCoins} coins = ₹${appState.rewards.coinValueInr}</span></div>
-            <div class="field-row"><label>Referral Bonus</label><span style="color:var(--brand); font-weight:700;">${appState.rewards.referralBonus} coins</span></div>
+            <div class="field-row"><label>Ad Reward/View</label><span style="color:var(--brand); font-weight:700;">+${appState.rewards.adRewardPerView} pts</span></div>
           </div>
         </div>
       </div>
     `;
     document.getElementById('qaResetLimits').onclick = resetAllLimits;
     document.getElementById('qaAds').onclick = () => navigateTo('ads');
-    document.getElementById('qaWd').onclick = () => navigateTo('withdrawals');
+    document.getElementById('qaPayments').onclick = () => navigateTo('payments');
     document.getElementById('qaMsg').onclick = () => navigateTo('messages');
   }
 
-  // ====================================================
-  // ANALYTICS
-  // ====================================================
+  // ============ ANALYTICS ============
   let analyticsRange = { type: 'today', from: null, to: null };
 
   function renderAnalytics(c) {
@@ -691,7 +694,7 @@
 
     const totalPoints = filtered.reduce((s, p) => s + (p.points || 0), 0);
     const positivePoints = filtered.filter(p => p.points > 0).reduce((s, p) => s + p.points, 0);
-    const totalAds = filtered.filter(p => ['ludo_win','color_game','watch_earn','try_luck','visit_site','social_task'].includes(p.taskType)).length;
+    const totalAds = filtered.filter(p => ['ludo_win','color_game','watch_earn','try_luck','visit_site','social_task','g29_win','ludo_win','carrom_win'].includes(p.taskType)).length;
     const uniqueUsers = new Set(filtered.map(p => p.userId)).size;
 
     const newUsers = usersList.filter(u => {
@@ -700,9 +703,7 @@
     }).length;
 
     const taskTypes = {};
-    filtered.forEach(p => {
-      taskTypes[p.taskType] = (taskTypes[p.taskType] || 0) + (p.points || 0);
-    });
+    filtered.forEach(p => { taskTypes[p.taskType] = (taskTypes[p.taskType] || 0) + (p.points || 0); });
 
     c.innerHTML = `
       <div class="card" style="margin-bottom:20px;">
@@ -727,26 +728,10 @@
       </div>
 
       <div class="analytics-grid">
-        <div class="stat-big">
-          <div class="label">Total Points Given</div>
-          <div class="value">${positivePoints.toFixed(0)}</div>
-          <div class="delta">Net: ${totalPoints.toFixed(0)}</div>
-        </div>
-        <div class="stat-big">
-          <div class="label">Ad Views / Tasks</div>
-          <div class="value">${totalAds}</div>
-          <div class="delta">Completed in range</div>
-        </div>
-        <div class="stat-big">
-          <div class="label">Active Users</div>
-          <div class="value">${uniqueUsers}</div>
-          <div class="delta">Unique users w/ activity</div>
-        </div>
-        <div class="stat-big">
-          <div class="label">New Users</div>
-          <div class="value">${newUsers}</div>
-          <div class="delta">Joined in range</div>
-        </div>
+        <div class="stat-big"><div class="label">Total Points Given</div><div class="value">${positivePoints.toFixed(0)}</div><div class="delta">Net: ${totalPoints.toFixed(0)}</div></div>
+        <div class="stat-big"><div class="label">Ad Views / Tasks</div><div class="value">${totalAds}</div><div class="delta">Completed in range</div></div>
+        <div class="stat-big"><div class="label">Active Users</div><div class="value">${uniqueUsers}</div><div class="delta">Unique users w/ activity</div></div>
+        <div class="stat-big"><div class="label">New Users</div><div class="value">${newUsers}</div><div class="delta">Joined in range</div></div>
       </div>
 
       <div class="card" style="margin-top:20px;">
@@ -775,26 +760,21 @@
 
   function prettyTaskName(t) {
     const map = {
-      ludo_win: '🎲 Ludo Win',
-      ludo_entry: '🎲 Ludo Entry',
-      ludo_refund: '🎲 Ludo Refund',
-      color_game: '🎨 Color Game',
-      watch_earn: '📺 Watch & Earn',
-      try_luck: '🍀 Try Your Luck',
-      visit_site: '🌐 Website Visit',
-      social_task: '📱 Social Task',
-      referral: '🎁 Referral',
-      withdrawal: '💸 Withdrawal',
-      ad_watch: '📺 Ad Watch'
+      ludo_win: '🎲 Ludo Win', ludoDice_win: '🎲 Ludo Dice Win', ludo_entry: '🎲 Ludo Entry',
+      ludoDice_entry: '🎲 Ludo Dice Entry', ludoDice_refund: '🎲 Ludo Dice Refund',
+      color_game: '🎨 Color Game', watch_earn: '📺 Watch & Earn',
+      try_luck: '🍀 Try Your Luck', visit_site: '🌐 Website Visit', social_task: '📱 Social Task',
+      referral: '🎁 Referral', withdrawal: '💸 Withdrawal', ad_watch: '📺 Ad Watch',
+      ad_collect: '💰 Ad Collect', g29_entry: '🃏 29 Entry', g29_win: '🃏 29 Win',
+      ludo_entry: '🎲 Ludo Entry', ludo_win: '🎲 Ludo Win',
+      carrom_entry: '🎯 Carrom Entry', carrom_win: '🎯 Carrom Win'
     };
     return map[t] || t;
   }
 
   function dateStr(d) { return d.toISOString().slice(0, 10); }
 
-  // ====================================================
-  // USERS
-  // ====================================================
+  // ============ USERS ============
   let userSearchQuery = '';
   let userSortKey = 'lastSeen';
   let userSortDir = 'desc';
@@ -813,15 +793,10 @@
     filtered.sort((a, b) => {
       let av, bv;
       if (userSortKey === 'lastSeen' || userSortKey === 'createdAt') {
-        av = a[userSortKey]?.seconds || 0;
-        bv = b[userSortKey]?.seconds || 0;
+        av = a[userSortKey]?.seconds || 0; bv = b[userSortKey]?.seconds || 0;
       } else if (userSortKey === 'balance' || userSortKey === 'totalEarned') {
-        av = a[userSortKey] || 0;
-        bv = b[userSortKey] || 0;
-      } else {
-        av = a[userSortKey] || '';
-        bv = b[userSortKey] || '';
-      }
+        av = a[userSortKey] || 0; bv = b[userSortKey] || 0;
+      } else { av = a[userSortKey] || ''; bv = b[userSortKey] || ''; }
       if (userSortDir === 'desc') return av > bv ? -1 : 1;
       return av < bv ? -1 : 1;
     });
@@ -843,12 +818,7 @@
           <table class="users-table">
             <thead>
               <tr>
-                <th>User</th>
-                <th>Balance</th>
-                <th>Earned</th>
-                <th>Ads</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th>User</th><th>Balance</th><th>Earned</th><th>Ads</th><th>Status</th><th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -873,7 +843,6 @@
             </tbody>
           </table>
         </div>
-        ${filtered.length > 200 ? '<div style="text-align:center; color:var(--text-mute); font-size:0.75rem; margin-top:12px;">Showing first 200 results</div>' : ''}
       </div>
     `;
 
@@ -910,7 +879,6 @@
           <div style="color:var(--text-mute); font-size:0.75rem;">Chat ID: ${u.telegramChatId || u.telegramId || '—'}</div>
         </div>
       </div>
-
       <div class="user-detail-row"><span>Balance</span><span style="color:var(--brand);">${(u.balance||0).toFixed(2)}</span></div>
       <div class="user-detail-row"><span>Total Earned</span><span>${(u.totalEarned||0).toFixed(2)}</span></div>
       <div class="user-detail-row"><span>Total Ad Views</span><span>${u.totalAdViews||0}</span></div>
@@ -921,7 +889,6 @@
       <div class="user-detail-row"><span>Joined</span><span>${u.createdAt?.seconds ? new Date(u.createdAt.seconds*1000).toLocaleDateString() : '—'}</span></div>
       <div class="user-detail-row"><span>Last Seen</span><span>${u.lastSeen?.seconds ? new Date(u.lastSeen.seconds*1000).toLocaleString() : '—'}</span></div>
       <div class="user-detail-row"><span>Status</span><span>${u.isBlocked ? '<span style="color:var(--danger);">Blocked</span>' : '<span style="color:var(--success);">Active</span>'}</span></div>
-
       <hr>
       <div class="divider-text">Actions</div>
       <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
@@ -944,7 +911,7 @@
     document.getElementById('udBlock').onclick = () => {
       const newState = !u.isBlocked;
       db.collection('users').doc(uid).update({ isBlocked: newState })
-        .then(() => { showToast(newState ? '🚫 User blocked' : '✅ User unblocked'); updateLocalUser(uid, { isBlocked: newState }); mb.classList.remove('show'); });
+        .then(() => { showToast(newState ? '🚫 Blocked' : '✅ Unblocked'); updateLocalUser(uid, { isBlocked: newState }); mb.classList.remove('show'); });
     };
     document.getElementById('udMessage').onclick = () => {
       mb.classList.remove('show');
@@ -962,9 +929,7 @@
     renderPage(currentPage);
   }
 
-  // ====================================================
-  // WITHDRAWALS
-  // ====================================================
+  // ============ WITHDRAWALS ============
   function renderWithdrawals(c) {
     const pending = withdrawalsList.filter(w => w.status === 'pending');
     const approved = withdrawalsList.filter(w => w.status === 'approved');
@@ -979,25 +944,19 @@
           <div class="stat-big"><div class="label">Rejected</div><div class="value">${rejected.length}</div></div>
         </div>
       </div>
-
       <div class="card" style="margin-bottom:20px;">
         <h2><i class="fas fa-clock"></i> Pending (${pending.length})</h2>
-        <div id="pendingWdList">
-          ${pending.length ? pending.map(w => renderWithdrawRow(w)).join('') : '<div class="empty-state">No pending requests</div>'}
-        </div>
+        ${pending.length ? pending.map(w => renderWithdrawRow(w)).join('') : '<div class="empty-state">No pending requests</div>'}
       </div>
-
       <div class="card" style="margin-bottom:20px;">
         <h2><i class="fas fa-check-circle"></i> Approved (${approved.length})</h2>
         ${approved.length ? approved.slice(0, 50).map(w => renderWithdrawRow(w)).join('') : '<div class="empty-state">None</div>'}
       </div>
-
       <div class="card">
         <h2><i class="fas fa-times-circle"></i> Rejected (${rejected.length})</h2>
         ${rejected.length ? rejected.slice(0, 50).map(w => renderWithdrawRow(w)).join('') : '<div class="empty-state">None</div>'}
       </div>
     `;
-
     c.querySelectorAll('[data-approve-wd]').forEach(btn => btn.onclick = () => approveWd(btn.dataset.approveWd));
     c.querySelectorAll('[data-reject-wd]').forEach(btn => btn.onclick = () => rejectWd(btn.dataset.rejectWd));
   }
@@ -1044,7 +1003,6 @@
       status: 'rejected',
       reviewedAt: firebase.firestore.FieldValue.serverTimestamp()
     });
-    // Refund coins
     const userRef = db.collection('users').doc(w.userId);
     const userSnap = await userRef.get();
     if (userSnap.exists) {
@@ -1054,23 +1012,20 @@
     showToast('❌ Withdrawal rejected and refunded');
   }
 
-  // ====================================================
-  // AD NETWORKS
-  // ====================================================
+  // ============ AD NETWORKS ============
   function renderAds(c) {
     const a = appState.ads;
     const providers = [
-      { key: 'gigapub',             label: 'Gigapub',              desc: 'Rewarded / interstitial network' },
-      { key: 'adsgramReward',       label: 'AdsGram Reward',       desc: 'Rewarded video (best conversion)' },
+      { key: 'gigapub', label: 'Gigapub', desc: 'Rewarded / interstitial network' },
+      { key: 'adsgramReward', label: 'AdsGram Reward', desc: 'Rewarded video (best conversion)' },
       { key: 'adsgramInterstitial', label: 'AdsGram Interstitial', desc: 'Full-screen interstitial' }
     ];
-
     c.innerHTML = `
       <div class="card" style="margin-bottom:20px;">
         <h2><i class="fas fa-ad"></i> Ad Network Rotation</h2>
         <p style="color:#8b9ac0; font-size:0.82rem; line-height:1.6; margin-bottom:16px;">
-          Enable the ad networks you want. The miniapp tries them in the order shown below
-          (lower number = tried first). If a network fails, it falls back to the next enabled one.
+          Enable the ad networks you want. The miniapp tries them in the order shown (lower = first).
+          At least one must stay enabled.
         </p>
         <div class="field-group">
           ${providers.map((p, i) => {
@@ -1088,21 +1043,11 @@
               </div>
             `;
           }).join('')}
-          <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:11px; padding:12px 14px; margin-top:6px;">
-            <div style="color:var(--warn); font-weight:700; font-size:0.78rem; margin-bottom:6px;">
-              <i class="fas fa-exclamation-triangle"></i> Important
-            </div>
-            <ul style="color:#94a3b8; font-size:0.74rem; line-height:1.7; list-style:none; padding-left:0;">
-              <li>• At least <b>one</b> network must stay enabled.</li>
-              <li>• Ads are shown as <b>optional</b> (users choose to double points or skip).</li>
-              <li>• Changes sync to users within seconds.</li>
-            </ul>
-          </div>
           <button class="btn" id="saveAdsBtn" style="margin-top:8px;"><i class="fas fa-save"></i> Save Ad Configuration</button>
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" style="margin-bottom:20px;">
         <h2><i class="fas fa-key"></i> Ad Network IDs</h2>
         <div class="field-group">
           <div class="field-row"><label>AdsGram Reward ID</label><input type="text" id="adsgramRewardId" value="${appState.rewards.adsgramRewardId || '21768'}" placeholder="21768"></div>
@@ -1111,10 +1056,27 @@
           <button class="btn" id="saveAdIdsBtn"><i class="fas fa-save"></i> Save Ad IDs</button>
         </div>
       </div>
-    `;
 
+      <div class="card">
+        <h2><i class="fas fa-coins"></i> Ad Reward When Broke</h2>
+        <p style="color:#8b9ac0; font-size:0.8rem; margin-bottom:14px;">
+          Points users get when they tap "Watch ad for points" (when balance is too low).
+        </p>
+        <div class="field-group">
+          <div class="field-row"><label>Reward per Ad</label><input type="number" id="adRewardPerView" value="${appState.rewards.adRewardPerView || 10}" step="5"></div>
+          <button class="btn" id="saveAdRewardBtn"><i class="fas fa-save"></i> Save</button>
+        </div>
+      </div>
+    `;
     document.getElementById('saveAdsBtn').onclick = saveAds;
     document.getElementById('saveAdIdsBtn').onclick = saveAdIds;
+    document.getElementById('saveAdRewardBtn').onclick = () => {
+      const v = parseFloat(document.getElementById('adRewardPerView').value) || 10;
+      appState.rewards.adRewardPerView = v;
+      db.collection('config').doc('main').set({ adRewardPerView: v, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true })
+        .then(() => showToast('✅ Saved'))
+        .catch(err => showToast('❌ ' + err.message, true));
+    };
   }
 
   function saveAds() {
@@ -1140,30 +1102,29 @@
       adsgramInterstitialId: document.getElementById('adsgramInterstitialId').value.trim(),
       gigapubScriptId: document.getElementById('gigapubScriptId').value.trim()
     };
-    appState.rewards.adsgramRewardId = payload.adsgramRewardId;
-    appState.rewards.adsgramInterstitialId = payload.adsgramInterstitialId;
-    appState.rewards.gigapubScriptId = payload.gigapubScriptId;
+    Object.assign(appState.rewards, payload);
     db.collection('config').doc('main').set(payload, { merge: true })
       .then(() => showToast('✅ Ad IDs saved'))
       .catch(err => showToast('❌ ' + err.message, true));
   }
 
-  // ====================================================
-  // GAMES
-  // ====================================================
+  // ============ GAMES ============
   function renderGames(c) {
     const g = appState.games;
     const rows = [
-      { key: 'ludo',   label: '🎲 Ludo Dice',    extras: ['gameCost', 'winMultiplier'] },
-      { key: 'color',  label: '🎨 Color Match',  extras: ['rewardPerPlay'] },
-      { key: 'watch',  label: '📺 Watch & Earn', extras: ['rewardPerPlay'] },
-      { key: 'luck',   label: '🍀 Try Your Luck',extras: ['rewardPerPlay'] },
-      { key: 'social', label: '📱 Social Tasks', extras: [] },
-      { key: 'visit',  label: '🌐 Visit & Earn', extras: [] },
-      { key: 'wallet', label: '💼 Wallet Page',  extras: [] },
-      { key: 'withdraw', label: '💸 Withdraw Button', extras: [] }
+      { key: 'g29',       label: '🃏 29 Card Game',  extras: ['entryFee','winnerReward'], limits: false },
+      { key: 'ludo',      label: '🎲 Ludo',           extras: ['entryFee','winnerReward'], limits: false },
+      { key: 'carrom',    label: '🎯 Carrom',         extras: ['entryFee','winnerReward'], limits: false },
+      { key: 'ludoDice',  label: '🎲 Ludo Dice',      extras: ['gameCost','winMultiplier'], limits: true },
+      { key: 'color',     label: '🎨 Color Match',    extras: ['rewardPerPlay'], limits: true },
+      { key: 'watch',     label: '📺 Watch & Earn',   extras: ['rewardPerPlay'], limits: true },
+      { key: 'luck',      label: '🍀 Try Your Luck',  extras: ['rewardPerPlay'], limits: true },
+      { key: 'social',    label: '📱 Social Tasks',   extras: [], limits: false },
+      { key: 'visit',     label: '🌐 Visit & Earn',   extras: [], limits: false },
+      { key: 'wallet',    label: '💼 Wallet Page',    extras: [], limits: false },
+      { key: 'withdraw',  label: '💸 Withdraw Button',extras: [], limits: false }
     ];
-    const labels = { gameCost: 'Entry Cost', winMultiplier: 'Win Multiplier', rewardPerPlay: 'Reward/Play' };
+    const labels = { gameCost:'Entry Cost', winMultiplier:'Win Multiplier', rewardPerPlay:'Reward/Play', entryFee:'Entry Fee', winnerReward:'Winner Reward' };
 
     c.innerHTML = `
       <div class="card">
@@ -1171,7 +1132,6 @@
         <div class="field-group">
           ${rows.map(r => {
             const cfg = g[r.key] || {};
-            const hasLimit = ['ludo','color','watch','luck'].includes(r.key);
             return `
               <div style="background:#0e1325; border-radius:13px; padding:14px 16px; border:1px solid #262f47;">
                 <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
@@ -1179,18 +1139,19 @@
                     <div style="font-weight:700; font-size:0.9rem;">${r.label}</div>
                     <div style="color:#6b7a9a; font-size:0.7rem; margin-top:2px;">
                       ${cfg.visible !== false ? 'Visible' : 'Hidden'}
-                      ${hasLimit ? ' · Limit: ' + (cfg.dailyPlayLimit || 0) + '/day' : ''}
+                      ${r.limits ? ' · Limit: ' + (cfg.dailyPlayLimit || 0) + '/day' : ''}
                     </div>
                   </div>
                   <div class="switch"><input type="checkbox" data-game-visible="${r.key}" ${cfg.visible !== false ? 'checked' : ''}></div>
                 </div>
-                ${hasLimit ? `
+                ${(r.limits || r.extras.length) ? `
                   <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
-                    <div style="flex:1; min-width:110px;">
-                      <label style="color:#6b7a9a; font-size:0.68rem; display:block; margin-bottom:4px;">Daily Limit</label>
-                      <input type="number" data-game-limit="${r.key}" value="${cfg.dailyPlayLimit || 0}" min="0"
-                             style="width:100%; background:#0a0e1a; border:1px solid #262f47; border-radius:8px; padding:8px 10px; color:white; font-family:inherit; font-size:0.85rem;">
-                    </div>
+                    ${r.limits ? `
+                      <div style="flex:1; min-width:110px;">
+                        <label style="color:#6b7a9a; font-size:0.68rem; display:block; margin-bottom:4px;">Daily Limit</label>
+                        <input type="number" data-game-limit="${r.key}" value="${cfg.dailyPlayLimit || 0}" min="0"
+                               style="width:100%; background:#0a0e1a; border:1px solid #262f47; border-radius:8px; padding:8px 10px; color:white; font-family:inherit; font-size:0.85rem;">
+                      </div>` : ''}
                     ${r.extras.map(extra => `
                       <div style="flex:1; min-width:110px;">
                         <label style="color:#6b7a9a; font-size:0.68rem; display:block; margin-bottom:4px;">${labels[extra] || extra}</label>
@@ -1233,9 +1194,13 @@
       .catch(err => showToast('❌ ' + err.message, true));
   }
 
+  /**
+   * Push games to BOTH config/games (miniapp keys) AND config/main (3-game entries).
+   */
   function pushGamesToFirebase(games) {
-    const payload = {
-      ludoDice: { visible: games.ludo.visible !== false, dailyPlayLimit: games.ludo.dailyPlayLimit || 0, gameCost: games.ludo.gameCost || 10, winMultiplier: games.ludo.winMultiplier || 10 },
+    // config/games — for standard games
+    const gamesPayload = {
+      ludoDice: { visible: games.ludoDice.visible !== false, dailyPlayLimit: games.ludoDice.dailyPlayLimit || 0, gameCost: games.ludoDice.gameCost || 10, winMultiplier: games.ludoDice.winMultiplier || 10 },
       colorGame: { visible: games.color.visible !== false, dailyPlayLimit: games.color.dailyPlayLimit || 0, rewardPerPlay: games.color.rewardPerPlay || 100 },
       watchVideo: { visible: games.watch.visible !== false, dailyPlayLimit: games.watch.dailyPlayLimit || 0, rewardPerPlay: games.watch.rewardPerPlay || 50 },
       tryYourLuck: { visible: games.luck.visible !== false, dailyPlayLimit: games.luck.dailyPlayLimit || 0, rewardPerPlay: games.luck.rewardPerPlay || 500 },
@@ -1243,24 +1208,39 @@
       visitWebsites: { visible: games.visit.visible !== false },
       wallet: { visible: games.wallet.visible !== false },
       withdraw: { visible: games.withdraw.visible !== false },
+      // 3-game visibility flags
+      game29: { visible: games.g29.visible !== false },
+      ludoGame: { visible: games.ludo.visible !== false },
+      carromGame: { visible: games.carrom.visible !== false },
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
-    return db.collection('config').doc('games').set(payload, { merge: true });
+
+    // config/main — for 3-game entry/reward params
+    const mainPayload = {
+      game29: { entryFee: games.g29.entryFee || 100, winnerReward: games.g29.winnerReward || 180 },
+      ludoGame: { entryFee: games.ludo.entryFee || 100, winnerReward: games.ludo.winnerReward || 180 },
+      carromGame: { entryFee: games.carrom.entryFee || 100, winnerReward: games.carrom.winnerReward || 180 },
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    return Promise.all([
+      db.collection('config').doc('games').set(gamesPayload, { merge: true }),
+      db.collection('config').doc('main').set(mainPayload, { merge: true })
+    ]);
   }
 
-  // ====================================================
-  // REWARDS
-  // ====================================================
+  // ============ REWARDS ============
   function renderRewards(c) {
     const r = appState.rewards;
     const fields = [
       { key: 'adWatch',       label: '💰 Ad Watch Reward',     step: 5 },
       { key: 'colorGame',     label: '🎨 Color Game Reward',   step: 5 },
-      { key: 'ludoGameCost',  label: '🎲 Ludo Entry Cost',     step: 5 },
-      { key: 'ludoMultiplier',label: '🎲 Ludo Win Multiplier', step: 1 },
+      { key: 'ludoGameCost',  label: '🎲 Ludo Dice Entry Cost',step: 5 },
+      { key: 'ludoMultiplier',label: '🎲 Ludo Dice Multiplier',step: 1 },
       { key: 'luckReward',    label: '🍀 Try Luck Reward',     step: 10 },
       { key: 'socialReward',  label: '📱 Social Task Reward',  step: 5 },
-      { key: 'visitReward',   label: '🌐 Visit Site Reward',   step: 5 }
+      { key: 'visitReward',   label: '🌐 Visit Site Reward',   step: 5 },
+      { key: 'adRewardPerView', label: '📺 Ad Reward (Broke)', step: 5 }
     ];
     c.innerHTML = `
       <div class="card">
@@ -1273,7 +1253,7 @@
             </div>
           `).join('')}
           <hr>
-          <div class="divider-text">Withdrawal</div>
+          <div class="divider-text">Withdrawal & Conversion</div>
           <div class="field-row"><label>💎 Min Withdrawal</label><input type="number" id="rw_minWithdraw" value="${r.minWithdraw}" step="100"></div>
           <div class="field-row">
             <label>🪙 Coin Value</label>
@@ -1292,7 +1272,7 @@
   }
 
   function saveRewards() {
-    const keys = ['adWatch','colorGame','ludoGameCost','ludoMultiplier','luckReward','socialReward','visitReward','minWithdraw','coinValueCoins','coinValueInr','referralBonus'];
+    const keys = ['adWatch','colorGame','ludoGameCost','ludoMultiplier','luckReward','socialReward','visitReward','adRewardPerView','minWithdraw','coinValueCoins','coinValueInr','referralBonus'];
     keys.forEach(k => {
       const el = document.getElementById(`rw_${k}`);
       if (el) appState.rewards[k] = parseFloat(el.value) || 0;
@@ -1305,6 +1285,7 @@
       tryYourLuckReward: appState.rewards.luckReward,
       socialReward: appState.rewards.socialReward,
       visitReward: appState.rewards.visitReward,
+      adRewardPerView: appState.rewards.adRewardPerView,
       minWithdrawal: appState.rewards.minWithdraw,
       coinValueCoins: appState.rewards.coinValueCoins,
       coinValueInr: appState.rewards.coinValueInr,
@@ -1316,13 +1297,85 @@
       .catch(err => showToast('❌ ' + err.message, true));
   }
 
-  // ====================================================
-  // CONTENT
-  // ====================================================
+  // ============ PAYMENT METHODS (NEW) ============
+  function renderPayments(c) {
+    const pms = appState.lists.paymentMethods || [];
+    c.innerHTML = `
+      <div class="card" style="margin-bottom:20px;">
+        <h2><i class="fas fa-credit-card"></i> Payment Methods</h2>
+        <p style="color:#8b9ac0; font-size:0.82rem; margin-bottom:16px; line-height:1.6;">
+          These methods appear in the user's withdrawal form. Each method has a label (shown to users)
+          and a placeholder (example text in the input field).
+        </p>
+        <div id="pmList">
+          ${pms.length ? pms.map((pm, i) => `
+            <div class="pm-row">
+              <span class="pm-badge">${i+1}</span>
+              <input type="text" data-pm-name="${i}" value="${escHtml(pm.name)}" placeholder="Method name (e.g., UPI)">
+              <input type="text" data-pm-placeholder="${i}" value="${escHtml(pm.placeholder || '')}" placeholder="Placeholder text">
+              <button class="btn btn-sm btn-danger" data-pm-remove="${i}"><i class="fas fa-trash"></i></button>
+            </div>
+          `).join('') : '<div class="empty-state">No payment methods yet</div>'}
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+          <button class="btn" id="addPmBtn"><i class="fas fa-plus"></i> Add Payment Method</button>
+          <button class="btn btn-outline" id="savePmBtn"><i class="fas fa-save"></i> Save</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><i class="fas fa-list"></i> Preview</h2>
+        <p style="color:#8b9ac0; font-size:0.82rem; margin-bottom:14px;">This is what users will see in the withdrawal dropdown.</p>
+        <div class="field-group">
+          <div class="field-row"><label>Method</label>
+            <select class="search-input" style="background:transparent; border:none;">
+              ${pms.map(pm => `<option>${escHtml(pm.name)}</option>`).join('')}
+            </select>
+          </div>
+          ${pms[0] ? `
+            <div class="field-row"><label>Details</label>
+              <input type="text" placeholder="${escHtml(pms[0].placeholder || '')}" disabled>
+            </div>` : ''}
+        </div>
+      </div>
+    `;
+
+    document.getElementById('addPmBtn').onclick = () => {
+      const name = prompt('Payment method name (e.g., UPI, Bank Transfer):');
+      if (!name) return;
+      appState.lists.paymentMethods.push({ name: name.trim(), placeholder: 'Enter ' + name.trim() + ' details' });
+      renderPayments(c);
+    };
+
+    document.getElementById('savePmBtn').onclick = () => {
+      const list = [];
+      document.querySelectorAll('[data-pm-name]').forEach((inp, i) => {
+        const name = inp.value.trim();
+        if (!name) return;
+        const ph = document.querySelector(`[data-pm-placeholder="${i}"]`)?.value.trim() || '';
+        list.push({ name, placeholder: ph });
+      });
+      appState.lists.paymentMethods = list;
+      db.collection('config').doc('main').set({
+        paymentMethods: list,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true })
+        .then(() => showToast('✅ Payment methods saved'))
+        .catch(err => showToast('❌ ' + err.message, true));
+    };
+
+    c.querySelectorAll('[data-pm-remove]').forEach(btn => {
+      btn.onclick = () => {
+        appState.lists.paymentMethods.splice(parseInt(btn.dataset.pmRemove), 1);
+        renderPayments(c);
+      };
+    });
+  }
+
+  // ============ CONTENT ============
   function renderContent(c) {
     const websites = appState.lists.websites || [];
     const social = appState.lists.socialTasks || [];
-    const payMethods = appState.lists.paymentMethods || [];
 
     c.innerHTML = `
       <div class="card" style="margin-bottom:20px;">
@@ -1338,7 +1391,7 @@
         <button class="btn" id="addWebsiteBtn" style="margin-top:8px;"><i class="fas fa-plus"></i> Add Website</button>
       </div>
 
-      <div class="card" style="margin-bottom:20px;">
+      <div class="card">
         <h2><i class="fas fa-share-nodes"></i> Social Tasks</h2>
         <div id="socialList">
           ${social.length ? social.map((s, i) => `
@@ -1349,19 +1402,6 @@
           `).join('') : '<div class="empty-state">No social tasks yet</div>'}
         </div>
         <button class="btn" id="addSocialBtn" style="margin-top:8px;"><i class="fas fa-plus"></i> Add Social Task</button>
-      </div>
-
-      <div class="card">
-        <h2><i class="fas fa-credit-card"></i> Payment Methods</h2>
-        <div id="payMethodList">
-          ${payMethods.length ? payMethods.map((m, i) => `
-            <div class="list-item">
-              <span class="info"><strong>${escHtml(m)}</strong></span>
-              <button class="btn btn-sm btn-danger" data-remove-paymethod="${i}"><i class="fas fa-trash"></i></button>
-            </div>
-          `).join('') : '<div class="empty-state">No payment methods yet</div>'}
-        </div>
-        <button class="btn" id="addPayMethodBtn" style="margin-top:8px;"><i class="fas fa-plus"></i> Add Payment Method</button>
       </div>
     `;
 
@@ -1381,12 +1421,6 @@
       appState.lists.socialTasks.push({ name, link, reward, icon });
       saveLists().then(() => renderContent(c));
     };
-    document.getElementById('addPayMethodBtn').onclick = () => {
-      const m = prompt('Payment method name (UPI, Paytm, PayPal...):');
-      if (!m) return;
-      appState.lists.paymentMethods.push(m.trim());
-      saveLists().then(() => renderContent(c));
-    };
 
     c.querySelectorAll('[data-remove-website]').forEach(b => b.onclick = () => {
       appState.lists.websites.splice(parseInt(b.dataset.removeWebsite), 1);
@@ -1396,17 +1430,12 @@
       appState.lists.socialTasks.splice(parseInt(b.dataset.removeSocial), 1);
       saveLists().then(() => renderContent(c));
     });
-    c.querySelectorAll('[data-remove-paymethod]').forEach(b => b.onclick = () => {
-      appState.lists.paymentMethods.splice(parseInt(b.dataset.removePaymethod), 1);
-      saveLists().then(() => renderContent(c));
-    });
   }
 
   function saveLists() {
     const payload = {
       websitesToVisit: appState.lists.websites,
       socialTasks: appState.lists.socialTasks,
-      paymentMethods: appState.lists.paymentMethods,
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
     return db.collection('config').doc('main').set(payload, { merge: true })
@@ -1414,9 +1443,7 @@
       .catch(err => showToast('❌ ' + err.message, true));
   }
 
-  // ====================================================
-  // BANNERS
-  // ====================================================
+  // ============ BANNERS ============
   function renderBanners(c) {
     const banners = appState.banners || [];
     c.innerHTML = `
@@ -1465,9 +1492,7 @@
     });
   }
 
-  // ====================================================
-  // NOTICE & BOT
-  // ====================================================
+  // ============ NOTICE & BOT ============
   function renderNotice(c) {
     const n = appState.notice;
     const b = appState.bot;
@@ -1549,7 +1574,6 @@
         .then(() => showToast('✅ Notice disabled'))
         .catch(err => showToast('❌ ' + err.message, true));
     };
-
     document.getElementById('saveBotBtn').onclick = () => {
       const token = document.getElementById('botToken').value.trim();
       const username = document.getElementById('botUsername').value.trim();
@@ -1559,7 +1583,6 @@
         .then(() => showToast('✅ Bot config saved'))
         .catch(err => showToast('❌ ' + err.message, true));
     };
-
     document.getElementById('testBotBtn').onclick = async () => {
       const token = document.getElementById('botToken').value.trim();
       if (!token) return showToast('❌ Enter bot token first', true);
@@ -1568,11 +1591,8 @@
         const j = await r.json();
         if (j.ok) showToast('✅ Bot working: @' + j.result.username);
         else showToast('❌ Invalid token', true);
-      } catch (e) {
-        showToast('❌ Network error', true);
-      }
+      } catch (e) { showToast('❌ Network error', true); }
     };
-
     document.getElementById('saveReferralBtn').onclick = () => {
       const bonus = parseInt(document.getElementById('refBonus').value) || 100;
       const shareText = document.getElementById('refShareText').value.trim();
@@ -1588,9 +1608,7 @@
     };
   }
 
-  // ====================================================
-  // SEND MESSAGE
-  // ====================================================
+  // ============ SEND MESSAGE ============
   function renderMessages(c) {
     const botReady = appState.bot.token && appState.bot.username;
     c.innerHTML = `
@@ -1606,7 +1624,6 @@
             </div>
           </div>
         ` : ''}
-
         <div class="field-group">
           <div class="field-row">
             <label>Target</label>
@@ -1628,21 +1645,16 @@
           <div id="msgStatus" style="color:var(--text-mute); font-size:0.75rem; margin-top:6px;"></div>
         </div>
       </div>
-
       <div class="card">
         <h2><i class="fas fa-history"></i> Recent Message History</h2>
-        <div id="msgHistoryList">
-          <div class="empty-state">Load history…</div>
-        </div>
+        <div id="msgHistoryList"><div class="empty-state">Load history…</div></div>
       </div>
     `;
-
     document.getElementById('sendMsgBtn').onclick = sendTelegramMsg;
     document.getElementById('clearMsgBtn').onclick = () => {
       document.getElementById('msgText').value = '';
       document.getElementById('msgStatus').textContent = '';
     };
-
     loadMessageHistory();
   }
 
@@ -1658,13 +1670,11 @@
     btn.disabled = true;
 
     let targets = [];
-    if (target === '__ALL__') {
-      targets = usersList.filter(u => u.telegramId && !u.isBlocked);
-    } else {
+    if (target === '__ALL__') targets = usersList.filter(u => u.telegramId && !u.isBlocked);
+    else {
       const u = usersList.find(x => x.uid === target);
       if (u && u.telegramId) targets = [u];
     }
-
     if (!targets.length) {
       statusEl.textContent = 'No valid targets.';
       btn.disabled = false;
@@ -1679,11 +1689,7 @@
         const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: u.telegramChatId || u.telegramId,
-            text,
-            parse_mode: 'HTML'
-          })
+          body: JSON.stringify({ chat_id: u.telegramChatId || u.telegramId, text, parse_mode: 'HTML' })
         });
         const j = await r.json();
         if (j.ok) sent++; else failed++;
@@ -1711,10 +1717,7 @@
     if (!el) return;
     try {
       const snap = await db.collection('adminMessages').orderBy('sentAt', 'desc').limit(20).get();
-      if (snap.empty) {
-        el.innerHTML = '<div class="empty-state">No messages sent yet</div>';
-        return;
-      }
+      if (snap.empty) { el.innerHTML = '<div class="empty-state">No messages sent yet</div>'; return; }
       const items = [];
       snap.forEach(d => items.push({ id: d.id, ...d.data() }));
       el.innerHTML = items.map(m => {
@@ -1726,20 +1729,14 @@
               <span style="color:var(--text-mute); font-size:0.68rem;">${date}</span>
             </div>
             <div style="color:#cbd5e1; font-size:0.78rem; margin-top:6px; line-height:1.5;">${escHtml((m.text||'').slice(0, 200))}</div>
-            <div style="color:var(--text-mute); font-size:0.68rem; margin-top:6px;">
-              ✅ ${m.sent} sent · ❌ ${m.failed} failed
-            </div>
+            <div style="color:var(--text-mute); font-size:0.68rem; margin-top:6px;">✅ ${m.sent} sent · ❌ ${m.failed} failed</div>
           </div>
         `;
       }).join('');
-    } catch (e) {
-      el.innerHTML = '<div class="empty-state">Could not load history</div>';
-    }
+    } catch (e) { el.innerHTML = '<div class="empty-state">Could not load history</div>'; }
   }
 
-  // ====================================================
-  // COUNTRY
-  // ====================================================
+  // ============ COUNTRY ============
   function renderCountry(c) {
     const co = appState.country;
     c.innerHTML = `
@@ -1771,9 +1768,7 @@
     };
   }
 
-  // ====================================================
-  // ACTIONS
-  // ====================================================
+  // ============ ACTIONS ============
   function resetAllLimits() {
     if (!confirm('Reset all daily limits for every user?')) return;
     const today = new Date().toISOString().slice(0, 10);
@@ -1788,9 +1783,7 @@
       .catch(err => showToast('❌ ' + err.message, true));
   }
 
-  // ====================================================
-  // FIREBASE — LOAD + REALTIME
-  // ====================================================
+  // ============ FIREBASE LOAD + REALTIME ============
   async function loadFromFirebase() {
     try {
       const [mainSnap, gamesSnap, adsSnap, noticeSnap, botSnap] = await Promise.all([
@@ -1803,6 +1796,7 @@
 
       if (mainSnap.exists) {
         const d = mainSnap.data();
+        // Rewards
         if (d.adWatchReward !== undefined) appState.rewards.adWatch = d.adWatchReward;
         if (d.colorGameReward !== undefined) appState.rewards.colorGame = d.colorGameReward;
         if (d.ludoGameCost !== undefined) appState.rewards.ludoGameCost = d.ludoGameCost;
@@ -1810,6 +1804,7 @@
         if (d.tryYourLuckReward !== undefined) appState.rewards.luckReward = d.tryYourLuckReward;
         if (d.socialReward !== undefined) appState.rewards.socialReward = d.socialReward;
         if (d.visitReward !== undefined) appState.rewards.visitReward = d.visitReward;
+        if (d.adRewardPerView !== undefined) appState.rewards.adRewardPerView = d.adRewardPerView;
         if (d.minWithdrawal !== undefined) appState.rewards.minWithdraw = d.minWithdrawal;
         if (d.coinValueCoins !== undefined) appState.rewards.coinValueCoins = d.coinValueCoins;
         if (d.coinValueInr !== undefined) appState.rewards.coinValueInr = d.coinValueInr;
@@ -1818,25 +1813,38 @@
         if (d.adsgramRewardId !== undefined) appState.rewards.adsgramRewardId = d.adsgramRewardId;
         if (d.adsgramInterstitialId !== undefined) appState.rewards.adsgramInterstitialId = d.adsgramInterstitialId;
         if (d.gigapubScriptId !== undefined) appState.rewards.gigapubScriptId = d.gigapubScriptId;
+        // Lists
         if (Array.isArray(d.websitesToVisit)) appState.lists.websites = d.websitesToVisit;
         if (Array.isArray(d.socialTasks)) appState.lists.socialTasks = d.socialTasks;
-        if (Array.isArray(d.paymentMethods)) appState.lists.paymentMethods = d.paymentMethods;
+        if (Array.isArray(d.paymentMethods)) {
+          // Map legacy strings → objects
+          appState.lists.paymentMethods = d.paymentMethods.map(pm =>
+            typeof pm === 'string' ? { name: pm, placeholder: 'Enter ' + pm + ' details' } : pm
+          );
+        }
         if (Array.isArray(d.sliderBanners)) appState.banners = d.sliderBanners;
         if (Array.isArray(d.allowedCountries)) appState.country.allowed = d.allowedCountries;
         if (d.ipinfoApiToken !== undefined) appState.country.ipinfoToken = d.ipinfoApiToken;
         if (d.blockedCountryMessage !== undefined) appState.country.blockMessage = d.blockedCountryMessage;
+        // 3-game configs
+        if (d.game29) { appState.games.g29.entryFee = d.game29.entryFee || 100; appState.games.g29.winnerReward = d.game29.winnerReward || 180; }
+        if (d.ludoGame) { appState.games.ludo.entryFee = d.ludoGame.entryFee || 100; appState.games.ludo.winnerReward = d.ludoGame.winnerReward || 180; }
+        if (d.carromGame) { appState.games.carrom.entryFee = d.carromGame.entryFee || 100; appState.games.carrom.winnerReward = d.carromGame.winnerReward || 180; }
       }
 
       if (gamesSnap.exists) {
         const g = gamesSnap.data();
-        if (g.ludoDice) appState.games.ludo = { visible: g.ludoDice.visible !== false, dailyPlayLimit: g.ludoDice.dailyPlayLimit || 0, gameCost: g.ludoDice.gameCost || 10, winMultiplier: g.ludoDice.winMultiplier || 10 };
-        if (g.colorGame) appState.games.color = { visible: g.colorGame.visible !== false, dailyPlayLimit: g.colorGame.dailyPlayLimit || 0, rewardPerPlay: g.colorGame.rewardPerPlay || 100 };
-        if (g.watchVideo) appState.games.watch = { visible: g.watchVideo.visible !== false, dailyPlayLimit: g.watchVideo.dailyPlayLimit || 0, rewardPerPlay: g.watchVideo.rewardPerPlay || 50 };
-        if (g.tryYourLuck) appState.games.luck = { visible: g.tryYourLuck.visible !== false, dailyPlayLimit: g.tryYourLuck.dailyPlayLimit || 0, rewardPerPlay: g.tryYourLuck.rewardPerPlay || 500 };
-        if (g.socialTasks) appState.games.social = { visible: g.socialTasks.visible !== false };
-        if (g.visitWebsites) appState.games.visit = { visible: g.visitWebsites.visible !== false };
-        if (g.wallet) appState.games.wallet = { visible: g.wallet.visible !== false };
-        if (g.withdraw) appState.games.withdraw = { visible: g.withdraw.visible !== false };
+        if (g.ludoDice) { appState.games.ludoDice.visible = g.ludoDice.visible !== false; appState.games.ludoDice.dailyPlayLimit = g.ludoDice.dailyPlayLimit || 0; appState.games.ludoDice.gameCost = g.ludoDice.gameCost || 10; appState.games.ludoDice.winMultiplier = g.ludoDice.winMultiplier || 10; }
+        if (g.colorGame) { appState.games.color.visible = g.colorGame.visible !== false; appState.games.color.dailyPlayLimit = g.colorGame.dailyPlayLimit || 0; appState.games.color.rewardPerPlay = g.colorGame.rewardPerPlay || 100; }
+        if (g.watchVideo) { appState.games.watch.visible = g.watchVideo.visible !== false; appState.games.watch.dailyPlayLimit = g.watchVideo.dailyPlayLimit || 0; appState.games.watch.rewardPerPlay = g.watchVideo.rewardPerPlay || 50; }
+        if (g.tryYourLuck) { appState.games.luck.visible = g.tryYourLuck.visible !== false; appState.games.luck.dailyPlayLimit = g.tryYourLuck.dailyPlayLimit || 0; appState.games.luck.rewardPerPlay = g.tryYourLuck.rewardPerPlay || 500; }
+        if (g.socialTasks) appState.games.social.visible = g.socialTasks.visible !== false;
+        if (g.visitWebsites) appState.games.visit.visible = g.visitWebsites.visible !== false;
+        if (g.wallet) appState.games.wallet.visible = g.wallet.visible !== false;
+        if (g.withdraw) appState.games.withdraw.visible = g.withdraw.visible !== false;
+        if (g.game29) appState.games.g29.visible = g.game29.visible !== false;
+        if (g.ludoGame) appState.games.ludo.visible = g.ludoGame.visible !== false;
+        if (g.carromGame) appState.games.carrom.visible = g.carromGame.visible !== false;
       }
 
       if (adsSnap.exists) {
@@ -1900,9 +1908,7 @@
     }, err => console.warn('pointHistory listener', err));
   }
 
-  // ====================================================
-  // UTILITIES
-  // ====================================================
+  // ============ UTILITIES ============
   function showToast(msg, isError = false) {
     const el = document.getElementById('toast');
     const icon = el.querySelector('i');
@@ -1921,26 +1927,18 @@
   function escHtml(s) {
     if (s == null) return '';
     return String(s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  // ====================================================
-  // GLOBAL
-  // ====================================================
+  // ============ GLOBAL BIND ============
   window.navigateTo = navigateTo;
   document.getElementById('modalBack').onclick = (e) => {
     if (e.target.id === 'modalBack') e.target.classList.remove('show');
   };
 
   document.querySelectorAll('.nav-item').forEach(el => {
-    el.addEventListener('click', (e) => {
-      e.preventDefault();
-      navigateTo(el.dataset.page);
-    });
+    el.addEventListener('click', (e) => { e.preventDefault(); navigateTo(el.dataset.page); });
   });
 
   document.getElementById('refreshBtn').onclick = () => loadFromFirebase();
@@ -1957,6 +1955,7 @@
         tryYourLuckReward: appState.rewards.luckReward,
         socialReward: appState.rewards.socialReward,
         visitReward: appState.rewards.visitReward,
+        adRewardPerView: appState.rewards.adRewardPerView,
         minWithdrawal: appState.rewards.minWithdraw,
         coinValueCoins: appState.rewards.coinValueCoins,
         coinValueInr: appState.rewards.coinValueInr,
@@ -1974,14 +1973,10 @@
       await db.collection('config').doc('bot').set(appState.bot, { merge: true });
       showToast('💾 All saved');
       updateTimestamp();
-    } catch (e) {
-      showToast('❌ ' + e.message, true);
-    }
+    } catch (e) { showToast('❌ ' + e.message, true); }
   };
 
-  // ====================================================
-  // BOOT (no authentication — direct access)
-  // ====================================================
+  // ============ BOOT ============
   loadFromFirebase();
   setupRealtimeListeners();
   navigateTo('dashboard');
