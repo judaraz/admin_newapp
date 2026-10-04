@@ -276,6 +276,44 @@
       font-size: 0.75rem; font-weight: 800; flex-shrink: 0;
     }
 
+    /* Game config row */
+    .game-config-row {
+      background: #0e1325;
+      border-radius: 13px;
+      padding: 14px 16px;
+      border: 1px solid #262f47;
+      margin-bottom: 10px;
+    }
+    .game-config-row .top {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .game-config-row .game-label {
+      flex: 1; min-width: 120px;
+    }
+    .game-config-row .game-label .name {
+      font-weight: 700; font-size: 0.9rem;
+    }
+    .game-config-row .game-label .meta {
+      color: #6b7a9a; font-size: 0.7rem; margin-top: 2px;
+    }
+    .game-config-row .fields {
+      display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap;
+    }
+    .game-config-row .fields > div {
+      flex: 1; min-width: 100px;
+    }
+    .game-config-row .fields label {
+      color: #6b7a9a; font-size: 0.68rem; display: block; margin-bottom: 4px;
+    }
+    .game-config-row .fields input {
+      width: 100%; background: #0a0e1a;
+      border: 1px solid #262f47; border-radius: 8px;
+      padding: 8px 10px; color: white;
+      font-family: inherit; font-size: 0.85rem;
+      outline: none;
+    }
+    .game-config-row .fields input:focus { border-color: var(--brand); }
+
     /* USERS TABLE */
     .users-toolbar {
       display: flex; gap: 10px; flex-wrap: wrap;
@@ -437,7 +475,6 @@
 </head>
 <body>
 
-<!-- SIDEBAR -->
 <nav class="sidebar">
   <div class="sidebar-brand">
     <i class="fas fa-crown"></i>
@@ -483,7 +520,6 @@
   </div>
 </nav>
 
-<!-- MAIN -->
 <div class="main-content">
   <div class="page-header">
     <div>
@@ -499,12 +535,10 @@
   <div id="pageContainer"></div>
 </div>
 
-<!-- MODAL -->
 <div class="modal-back" id="modalBack">
   <div class="modal-box" id="modalBox"></div>
 </div>
 
-<!-- TOAST -->
 <div id="toast" class="toast">
   <i class="fas fa-check-circle" style="color:var(--brand);"></i>
   <span id="toastMsg">Saved</span>
@@ -529,6 +563,7 @@
   // ============ STATE ============
   let appState = {
     games: {
+      // Standard games
       ludoDice: { visible: true, dailyPlayLimit: 5, gameCost: 10, winMultiplier: 10 },
       color:    { visible: true, dailyPlayLimit: 8, rewardPerPlay: 100 },
       watch:    { visible: true, dailyPlayLimit: 10, rewardPerPlay: 50 },
@@ -537,10 +572,10 @@
       visit:    { visible: true },
       wallet:   { visible: true },
       withdraw: { visible: true },
-      // New 3 games
-      g29:      { visible: true, entryFee: 100, winnerReward: 180 },
-      ludo:     { visible: true, entryFee: 100, winnerReward: 180 },
-      carrom:   { visible: true, entryFee: 100, winnerReward: 180 }
+      // 3 NEW games (with daily play limits)
+      g29:      { visible: true, entryFee: 100, winnerReward: 180, dailyPlayLimit: 5 },
+      ludo:     { visible: true, entryFee: 100, winnerReward: 180, dailyPlayLimit: 5 },
+      carrom:   { visible: true, entryFee: 100, winnerReward: 180, dailyPlayLimit: 5 }
     },
     ads: {
       gigapub:             { enabled: true, order: 1 },
@@ -557,15 +592,15 @@
       adsgramRewardId: '21768',
       adsgramInterstitialId: 'int-21769',
       gigapubScriptId: '1794',
-      adRewardPerView: 10   // for "watch ad for points" when broke
+      adRewardPerView: 10
     },
     lists: {
       websites: [],
       socialTasks: [],
       paymentMethods: [
-        { name: 'UPI', id: 'upi', placeholder: 'Enter UPI ID (e.g., user@bank)' },
-        { name: 'Paytm', id: 'paytm', placeholder: 'Enter Paytm Number' },
-        { name: 'PayPal', id: 'paypal', placeholder: 'Enter PayPal Email' }
+        { name: 'UPI', placeholder: 'Enter UPI ID (e.g., user@bank)' },
+        { name: 'Paytm', placeholder: 'Enter Paytm Number' },
+        { name: 'PayPal', placeholder: 'Enter PayPal Email' }
       ]
     },
     banners: [],
@@ -649,7 +684,7 @@
           <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
           <div class="field-group">
             <button class="btn" id="qaResetLimits"><i class="fas fa-redo-alt"></i> Reset Daily Limits</button>
-            <button class="btn btn-outline" id="qaAds"><i class="fas fa-ad"></i> Manage Ad Networks</button>
+            <button class="btn btn-outline" id="qaAds"><i class="fas fa-ad"></i> Ad Networks</button>
             <button class="btn btn-outline" id="qaPayments"><i class="fas fa-credit-card"></i> Payment Methods</button>
             <button class="btn btn-outline" id="qaMsg"><i class="fas fa-envelope"></i> Send Message</button>
           </div>
@@ -694,7 +729,7 @@
 
     const totalPoints = filtered.reduce((s, p) => s + (p.points || 0), 0);
     const positivePoints = filtered.filter(p => p.points > 0).reduce((s, p) => s + p.points, 0);
-    const totalAds = filtered.filter(p => ['ludo_win','color_game','watch_earn','try_luck','visit_site','social_task','g29_win','ludo_win','carrom_win'].includes(p.taskType)).length;
+    const totalAds = filtered.filter(p => ['ludo_win','color_game','watch_earn','try_luck','visit_site','social_task','g29_win','ludoDice_win','carrom_win'].includes(p.taskType)).length;
     const uniqueUsers = new Set(filtered.map(p => p.userId)).size;
 
     const newUsers = usersList.filter(u => {
@@ -765,7 +800,8 @@
       color_game: '🎨 Color Game', watch_earn: '📺 Watch & Earn',
       try_luck: '🍀 Try Your Luck', visit_site: '🌐 Website Visit', social_task: '📱 Social Task',
       referral: '🎁 Referral', withdrawal: '💸 Withdrawal', ad_watch: '📺 Ad Watch',
-      ad_collect: '💰 Ad Collect', g29_entry: '🃏 29 Entry', g29_win: '🃏 29 Win',
+      ad_collect: '💰 Ad Collect',
+      g29_entry: '🃏 29 Entry', g29_win: '🃏 29 Win',
       ludo_entry: '🎲 Ludo Entry', ludo_win: '🎲 Ludo Win',
       carrom_entry: '🎯 Carrom Entry', carrom_win: '🎯 Carrom Win'
     };
@@ -1108,55 +1144,72 @@
       .catch(err => showToast('❌ ' + err.message, true));
   }
 
-  // ============ GAMES ============
+  // ============ GAMES (WITH DAILY LIMITS FOR ALL) ============
   function renderGames(c) {
     const g = appState.games;
-    const rows = [
-      { key: 'g29',       label: '🃏 29 Card Game',  extras: ['entryFee','winnerReward'], limits: false },
-      { key: 'ludo',      label: '🎲 Ludo',           extras: ['entryFee','winnerReward'], limits: false },
-      { key: 'carrom',    label: '🎯 Carrom',         extras: ['entryFee','winnerReward'], limits: false },
-      { key: 'ludoDice',  label: '🎲 Ludo Dice',      extras: ['gameCost','winMultiplier'], limits: true },
-      { key: 'color',     label: '🎨 Color Match',    extras: ['rewardPerPlay'], limits: true },
-      { key: 'watch',     label: '📺 Watch & Earn',   extras: ['rewardPerPlay'], limits: true },
-      { key: 'luck',      label: '🍀 Try Your Luck',  extras: ['rewardPerPlay'], limits: true },
-      { key: 'social',    label: '📱 Social Tasks',   extras: [], limits: false },
-      { key: 'visit',     label: '🌐 Visit & Earn',   extras: [], limits: false },
-      { key: 'wallet',    label: '💼 Wallet Page',    extras: [], limits: false },
-      { key: 'withdraw',  label: '💸 Withdraw Button',extras: [], limits: false }
+
+    // Game groups with their config fields
+    const gameRows = [
+      // 3 NEW games (with daily limit + entry + reward)
+      { key: 'g29',      label: '🃏 29 Card Game',   extras: ['entryFee','winnerReward'], hasLimit: true },
+      { key: 'ludo',     label: '🎲 Ludo (board)',   extras: ['entryFee','winnerReward'], hasLimit: true },
+      { key: 'carrom',   label: '🎯 Carrom',         extras: ['entryFee','winnerReward'], hasLimit: true },
+      // Standard games
+      { key: 'ludoDice', label: '🎲 Ludo Dice',      extras: ['gameCost','winMultiplier'], hasLimit: true },
+      { key: 'color',    label: '🎨 Color Match',    extras: ['rewardPerPlay'], hasLimit: true },
+      { key: 'watch',    label: '📺 Watch & Earn',   extras: ['rewardPerPlay'], hasLimit: true },
+      { key: 'luck',     label: '🍀 Try Your Luck',  extras: ['rewardPerPlay'], hasLimit: true },
+      // No-limit toggles
+      { key: 'social',   label: '📱 Social Tasks',   extras: [], hasLimit: false },
+      { key: 'visit',    label: '🌐 Visit & Earn',   extras: [], hasLimit: false },
+      { key: 'wallet',   label: '💼 Wallet Page',    extras: [], hasLimit: false },
+      { key: 'withdraw', label: '💸 Withdraw Button',extras: [], hasLimit: false }
     ];
-    const labels = { gameCost:'Entry Cost', winMultiplier:'Win Multiplier', rewardPerPlay:'Reward/Play', entryFee:'Entry Fee', winnerReward:'Winner Reward' };
+
+    const labels = {
+      gameCost: 'Entry Cost',
+      winMultiplier: 'Win Multiplier',
+      rewardPerPlay: 'Reward / Play',
+      entryFee: 'Entry Fee',
+      winnerReward: 'Winner Reward',
+      dailyPlayLimit: 'Daily Limit'
+    };
 
     c.innerHTML = `
       <div class="card">
-        <h2><i class="fas fa-gamepad"></i> Games & Visibility</h2>
+        <h2><i class="fas fa-gamepad"></i> Games, Limits & Visibility</h2>
+        <p style="color:#8b9ac0; font-size:0.8rem; margin-bottom:14px; line-height:1.6;">
+          Set visibility, daily play limits, and rewards for each game. Set <b>Daily Limit = 0</b> for unlimited.
+        </p>
         <div class="field-group">
-          ${rows.map(r => {
+          ${gameRows.map(r => {
             const cfg = g[r.key] || {};
             return `
-              <div style="background:#0e1325; border-radius:13px; padding:14px 16px; border:1px solid #262f47;">
-                <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-                  <div style="flex:1; min-width:120px;">
-                    <div style="font-weight:700; font-size:0.9rem;">${r.label}</div>
-                    <div style="color:#6b7a9a; font-size:0.7rem; margin-top:2px;">
+              <div class="game-config-row">
+                <div class="top">
+                  <div class="game-label">
+                    <div class="name">${r.label}</div>
+                    <div class="meta">
                       ${cfg.visible !== false ? 'Visible' : 'Hidden'}
-                      ${r.limits ? ' · Limit: ' + (cfg.dailyPlayLimit || 0) + '/day' : ''}
+                      ${r.hasLimit ? ' · Limit: ' + (cfg.dailyPlayLimit || 0) + '/day' : ''}
                     </div>
                   </div>
-                  <div class="switch"><input type="checkbox" data-game-visible="${r.key}" ${cfg.visible !== false ? 'checked' : ''}></div>
+                  <div class="switch">
+                    <input type="checkbox" data-game-visible="${r.key}" ${cfg.visible !== false ? 'checked' : ''}>
+                  </div>
                 </div>
-                ${(r.limits || r.extras.length) ? `
-                  <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
-                    ${r.limits ? `
-                      <div style="flex:1; min-width:110px;">
-                        <label style="color:#6b7a9a; font-size:0.68rem; display:block; margin-bottom:4px;">Daily Limit</label>
-                        <input type="number" data-game-limit="${r.key}" value="${cfg.dailyPlayLimit || 0}" min="0"
-                               style="width:100%; background:#0a0e1a; border:1px solid #262f47; border-radius:8px; padding:8px 10px; color:white; font-family:inherit; font-size:0.85rem;">
-                      </div>` : ''}
+                ${(r.hasLimit || r.extras.length) ? `
+                  <div class="fields">
+                    ${r.hasLimit ? `
+                      <div>
+                        <label>Daily Limit (0 = ∞)</label>
+                        <input type="number" data-game-limit="${r.key}" value="${cfg.dailyPlayLimit || 0}" min="0">
+                      </div>
+                    ` : ''}
                     ${r.extras.map(extra => `
-                      <div style="flex:1; min-width:110px;">
-                        <label style="color:#6b7a9a; font-size:0.68rem; display:block; margin-bottom:4px;">${labels[extra] || extra}</label>
-                        <input type="number" data-game-extra="${r.key}:${extra}" value="${cfg[extra] || 0}" min="0"
-                               style="width:100%; background:#0a0e1a; border:1px solid #262f47; border-radius:8px; padding:8px 10px; color:white; font-family:inherit; font-size:0.85rem;">
+                      <div>
+                        <label>${labels[extra] || extra}</label>
+                        <input type="number" data-game-extra="${r.key}:${extra}" value="${cfg[extra] || 0}" min="0">
                       </div>
                     `).join('')}
                   </div>
@@ -1164,7 +1217,7 @@
               </div>
             `;
           }).join('')}
-          <button class="btn" id="saveGamesBtn" style="margin-top:8px;"><i class="fas fa-save"></i> Save Game Config</button>
+          <button class="btn" id="saveGamesBtn" style="margin-top:8px;"><i class="fas fa-save"></i> Save All Games</button>
         </div>
       </div>
     `;
@@ -1194,32 +1247,61 @@
       .catch(err => showToast('❌ ' + err.message, true));
   }
 
-  /**
-   * Push games to BOTH config/games (miniapp keys) AND config/main (3-game entries).
-   */
   function pushGamesToFirebase(games) {
-    // config/games — for standard games
+    // config/games — standard game data + visibility flags for all
     const gamesPayload = {
-      ludoDice: { visible: games.ludoDice.visible !== false, dailyPlayLimit: games.ludoDice.dailyPlayLimit || 0, gameCost: games.ludoDice.gameCost || 10, winMultiplier: games.ludoDice.winMultiplier || 10 },
-      colorGame: { visible: games.color.visible !== false, dailyPlayLimit: games.color.dailyPlayLimit || 0, rewardPerPlay: games.color.rewardPerPlay || 100 },
-      watchVideo: { visible: games.watch.visible !== false, dailyPlayLimit: games.watch.dailyPlayLimit || 0, rewardPerPlay: games.watch.rewardPerPlay || 50 },
-      tryYourLuck: { visible: games.luck.visible !== false, dailyPlayLimit: games.luck.dailyPlayLimit || 0, rewardPerPlay: games.luck.rewardPerPlay || 500 },
+      ludoDice: {
+        visible: games.ludoDice.visible !== false,
+        dailyPlayLimit: games.ludoDice.dailyPlayLimit || 0,
+        gameCost: games.ludoDice.gameCost || 10,
+        winMultiplier: games.ludoDice.winMultiplier || 10
+      },
+      colorGame: {
+        visible: games.color.visible !== false,
+        dailyPlayLimit: games.color.dailyPlayLimit || 0,
+        rewardPerPlay: games.color.rewardPerPlay || 100
+      },
+      watchVideo: {
+        visible: games.watch.visible !== false,
+        dailyPlayLimit: games.watch.dailyPlayLimit || 0,
+        rewardPerPlay: games.watch.rewardPerPlay || 50
+      },
+      tryYourLuck: {
+        visible: games.luck.visible !== false,
+        dailyPlayLimit: games.luck.dailyPlayLimit || 0,
+        rewardPerPlay: games.luck.rewardPerPlay || 500
+      },
       socialTasks: { visible: games.social.visible !== false },
       visitWebsites: { visible: games.visit.visible !== false },
       wallet: { visible: games.wallet.visible !== false },
       withdraw: { visible: games.withdraw.visible !== false },
-      // 3-game visibility flags
+      // 3-game visibility
       game29: { visible: games.g29.visible !== false },
       ludoGame: { visible: games.ludo.visible !== false },
       carromGame: { visible: games.carrom.visible !== false },
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
 
-    // config/main — for 3-game entry/reward params
+    // config/main — 3-game entry/reward/dailyLimit
     const mainPayload = {
-      game29: { entryFee: games.g29.entryFee || 100, winnerReward: games.g29.winnerReward || 180 },
-      ludoGame: { entryFee: games.ludo.entryFee || 100, winnerReward: games.ludo.winnerReward || 180 },
-      carromGame: { entryFee: games.carrom.entryFee || 100, winnerReward: games.carrom.winnerReward || 180 },
+      game29: {
+        entryFee: games.g29.entryFee || 100,
+        winnerReward: games.g29.winnerReward || 180,
+        dailyPlayLimit: games.g29.dailyPlayLimit || 0,
+        visible: games.g29.visible !== false
+      },
+      ludoGame: {
+        entryFee: games.ludo.entryFee || 100,
+        winnerReward: games.ludo.winnerReward || 180,
+        dailyPlayLimit: games.ludo.dailyPlayLimit || 0,
+        visible: games.ludo.visible !== false
+      },
+      carromGame: {
+        entryFee: games.carrom.entryFee || 100,
+        winnerReward: games.carrom.winnerReward || 180,
+        dailyPlayLimit: games.carrom.dailyPlayLimit || 0,
+        visible: games.carrom.visible !== false
+      },
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
 
@@ -1297,21 +1379,20 @@
       .catch(err => showToast('❌ ' + err.message, true));
   }
 
-  // ============ PAYMENT METHODS (NEW) ============
+  // ============ PAYMENT METHODS ============
   function renderPayments(c) {
     const pms = appState.lists.paymentMethods || [];
     c.innerHTML = `
       <div class="card" style="margin-bottom:20px;">
         <h2><i class="fas fa-credit-card"></i> Payment Methods</h2>
         <p style="color:#8b9ac0; font-size:0.82rem; margin-bottom:16px; line-height:1.6;">
-          These methods appear in the user's withdrawal form. Each method has a label (shown to users)
-          and a placeholder (example text in the input field).
+          These methods appear in the user's withdrawal form. Each method has a label and a placeholder.
         </p>
         <div id="pmList">
           ${pms.length ? pms.map((pm, i) => `
             <div class="pm-row">
               <span class="pm-badge">${i+1}</span>
-              <input type="text" data-pm-name="${i}" value="${escHtml(pm.name)}" placeholder="Method name (e.g., UPI)">
+              <input type="text" data-pm-name="${i}" value="${escHtml(pm.name)}" placeholder="Method name">
               <input type="text" data-pm-placeholder="${i}" value="${escHtml(pm.placeholder || '')}" placeholder="Placeholder text">
               <button class="btn btn-sm btn-danger" data-pm-remove="${i}"><i class="fas fa-trash"></i></button>
             </div>
@@ -1777,7 +1858,10 @@
       ludoDice_reset_date: today,
       colorGame_reset_date: today,
       watchVideo_reset_date: today,
-      tryYourLuck_reset_date: today
+      tryYourLuck_reset_date: today,
+      g29_reset_date: today,
+      ludo_reset_date: today,
+      carrom_reset_date: today
     }, { merge: true })
       .then(() => showToast('♻️ All limits reset'))
       .catch(err => showToast('❌ ' + err.message, true));
@@ -1817,7 +1901,6 @@
         if (Array.isArray(d.websitesToVisit)) appState.lists.websites = d.websitesToVisit;
         if (Array.isArray(d.socialTasks)) appState.lists.socialTasks = d.socialTasks;
         if (Array.isArray(d.paymentMethods)) {
-          // Map legacy strings → objects
           appState.lists.paymentMethods = d.paymentMethods.map(pm =>
             typeof pm === 'string' ? { name: pm, placeholder: 'Enter ' + pm + ' details' } : pm
           );
@@ -1827,9 +1910,21 @@
         if (d.ipinfoApiToken !== undefined) appState.country.ipinfoToken = d.ipinfoApiToken;
         if (d.blockedCountryMessage !== undefined) appState.country.blockMessage = d.blockedCountryMessage;
         // 3-game configs
-        if (d.game29) { appState.games.g29.entryFee = d.game29.entryFee || 100; appState.games.g29.winnerReward = d.game29.winnerReward || 180; }
-        if (d.ludoGame) { appState.games.ludo.entryFee = d.ludoGame.entryFee || 100; appState.games.ludo.winnerReward = d.ludoGame.winnerReward || 180; }
-        if (d.carromGame) { appState.games.carrom.entryFee = d.carromGame.entryFee || 100; appState.games.carrom.winnerReward = d.carromGame.winnerReward || 180; }
+        if (d.game29) {
+          appState.games.g29.entryFee = d.game29.entryFee || 100;
+          appState.games.g29.winnerReward = d.game29.winnerReward || 180;
+          appState.games.g29.dailyPlayLimit = d.game29.dailyPlayLimit || 0;
+        }
+        if (d.ludoGame) {
+          appState.games.ludo.entryFee = d.ludoGame.entryFee || 100;
+          appState.games.ludo.winnerReward = d.ludoGame.winnerReward || 180;
+          appState.games.ludo.dailyPlayLimit = d.ludoGame.dailyPlayLimit || 0;
+        }
+        if (d.carromGame) {
+          appState.games.carrom.entryFee = d.carromGame.entryFee || 100;
+          appState.games.carrom.winnerReward = d.carromGame.winnerReward || 180;
+          appState.games.carrom.dailyPlayLimit = d.carromGame.dailyPlayLimit || 0;
+        }
       }
 
       if (gamesSnap.exists) {
@@ -1885,6 +1980,7 @@
       if (currentPage === 'users') renderUsers(document.getElementById('pageContainer'));
       else if (currentPage === 'dashboard') renderDashboard(document.getElementById('pageContainer'));
       else if (currentPage === 'analytics') renderAnalytics(document.getElementById('pageContainer'));
+      else if (currentPage === 'messages') renderMessages(document.getElementById('pageContainer'));
     }, err => console.warn('users listener', err));
 
     db.collection('withdrawals').onSnapshot(snap => {
@@ -1931,7 +2027,7 @@
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  // ============ GLOBAL BIND ============
+  // ============ GLOBAL ============
   window.navigateTo = navigateTo;
   document.getElementById('modalBack').onclick = (e) => {
     if (e.target.id === 'modalBack') e.target.classList.remove('show');
